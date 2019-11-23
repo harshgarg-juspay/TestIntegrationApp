@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context=".PaymentsActivity">
+
+    <LinearLayout
+        android:id="@+id/initiateLayout"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginVertical="16dp"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimary" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:onClick="showInitiateSigningInput"
+                    android:text="@string/input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"/>
+
+                <Button
+                    android:onClick="showInitiateSigningOutput"
+                    android:text="@string/output"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"/>
+
+                <ImageView
+                    android:onClick="showSigningFAQ"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:padding="2dp"
+                    android:src="@drawable/ic_faq" />
+
+
+            </LinearLayout>
+
+            <Button
+                android:onClick="signSignaturePayload"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sign Initiate Payload"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginVertical="16dp"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimary" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:onClick="showInitiateInput"
+                    android:text="@string/input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"/>
+
+                <ImageView
+                    android:onClick="showInitiateFAQ"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:padding="2dp"
+                    android:src="@drawable/ic_faq" />
+
+
+            </LinearLayout>
+
+            <Button
+                android:onClick="initiateJuspaySdk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Initiate"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginVertical="16dp"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimary" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.0"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/proceed"
+            android:onClick="startProcessActivity"
+            android:layout_margin="16dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/processLayout"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginVertical="16dp"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimary" />
+
+        <Button
+            android:onClick="generateOrderID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:text="Generate Order ID"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginVertical="16dp"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimary" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:onClick="showProcessSigningInput"
+                    android:text="@string/input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"/>
+
+                <Button
+                    android:onClick="showProcessSigningOutput"
+                    android:text="@string/output"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"/>
+
+                <ImageView
+                    android:onClick="showSigningFAQ"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:padding="2dp"
+                    android:src="@drawable/ic_faq" />
+
+
+            </LinearLayout>
+
+            <Button
+                android:onClick="signOrderDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sign Process Payload"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginVertical="16dp"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimary" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:onClick="showProcessInput"
+                    android:text="@string/input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"/>
+
+                <ImageView
+                    android:onClick="showProcessFAQ"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:padding="2dp"
+                    android:src="@drawable/ic_faq" />
+
+
+            </LinearLayout>
+
+            <Button
+                android:onClick="processJuspaySdk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Process"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginVertical="16dp"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimary" />
+
+
+    </LinearLayout>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

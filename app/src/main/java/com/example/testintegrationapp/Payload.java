@@ -117,7 +117,7 @@ public class Payload {
         final public static String clientId = "hyper_beta_android";
         final public static String firstName = "Harsh";
         final public static String lastName = "Garg";
-        final public static String emailAddress = "harsh.garg@juspay.in";
+        final public static String emailAddress = "test@juspay.in";
         final public static String customerId = "R1234567890";
         final public static String merchantId = "hyper_beta";
 

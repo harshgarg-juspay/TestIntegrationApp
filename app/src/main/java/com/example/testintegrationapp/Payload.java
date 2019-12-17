@@ -113,18 +113,18 @@ public class Payload {
 
         final public static String service = "in.juspay.hyperpay";
 
-        final public static String mobileNumber = "<mobileNumber>";
-        final public static String clientId = "<clientId>";
-        final public static String firstName = "<firstName>";
-        final public static String lastName = "<lastName>";
-        final public static String emailAddress = "<emailAddress>";
-        final public static String customerId = "<customerId>";
-        final public static String merchantId = "<merchantId>";
+        final public static String mobileNumber = "1234567890";
+        final public static String clientId = "hyper_beta_android";
+        final public static String firstName = "abc";
+        final public static String lastName = "aaa";
+        final public static String emailAddress = "xyz.a@juspay.in";
+        final public static String customerId = "1234567890";
+        final public static String merchantId = "hyper_beta";
 
         final public static String init_action = "initiate";
         final public static String process_action = "payment_page";
-        final public static String merchantKeyId = "<merchantKeyId>";
-        final public static String environment = "<environment>";
+        final public static String merchantKeyId = "2992";
+        final public static String environment = "sandbox";
 
         final public static String amount = "1.0";
         final public static String language = "english";

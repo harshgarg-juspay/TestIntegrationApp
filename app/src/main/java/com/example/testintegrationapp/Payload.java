@@ -57,6 +57,7 @@ public class Payload {
             orderDetails.put("time_stamp", getTimeStamp());
             orderDetails.put("merchant_id", PayloadConstants.merchantId);
             orderDetails.put("amount", PayloadConstants.amount);
+            orderDetails.put("return_url", PayloadConstants.returnUrl);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -127,6 +128,7 @@ public class Payload {
         final public static String environment = "sandbox";
 
         final public static String amount = "1.0";
+        final public static String returnUrl = "https://sandbox.juspay.in/end";
         final public static String language = "english";
 
         final public static boolean betaAssets = true;

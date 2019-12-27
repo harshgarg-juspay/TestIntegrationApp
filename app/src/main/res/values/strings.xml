@@ -4,4 +4,28 @@
     <string name="input">Input</string>
     <string name="output">Output</string>
     <string name="proceed">Proceed</string>
+    <string name="prefetchDesc">
+        Hit INPUT button to refer the input given 
+        \n i.e., params passed.
+        \nStep 1. Hit PREFETCH button.
+        \nStep 2. Hit PROCEED button.
+        \n\nRefer FAQ section for additional details.
+    </string>
+
+    <string name="initiateDesc">
+        Hit INPUT button to refer the input given and OUTPUT button to look into Signed input.
+        \nStep 1. Hit SIGN CUSTOMER DETAILS PAYLOAD button.
+        \nStep 2. Hit INITIATE button.
+        \nStep 3. Hit PROCEED button.
+        \n\nRefer FAQ section for additional details.
+    </string>
+
+    <string name="processDesc">
+         Step 1. Hit GENERATE ORDER ID button.
+        \nStep 2. Hit SIGN ORDER DETAILS PAYLOAD button.
+        \nStep 3. Hit PROCESS button.
+        \nHit INPUT button to check input passed and OUTPUT button to check signed input under SIGN ORDER DETAILS PAYLOAD.
+        \nHit INPUT button to check process input under PROCESS.
+        \n\nRefer FAQ section for additional details.
+    </string>
 </resources>

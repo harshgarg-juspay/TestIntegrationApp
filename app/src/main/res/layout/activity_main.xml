@@ -57,10 +57,11 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="16dp">
 
         <TextView
-            android:text="Hit INPUT button to refer the input given \n  i.e., params passed.\nStep 1. Hit PREFETCH button.\nStep 2. Hit PROCEED button.\n\nRefer FAQ section for additional details."
+            android:text="@string/prefetchDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

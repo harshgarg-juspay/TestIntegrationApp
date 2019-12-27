@@ -112,10 +112,11 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="16dp">
 
             <TextView
-                android:text="Hit INPUT button to refer the input given and OUTPUT button to look into Signed input.\nStep 1. Hit SIGN CUSTOMER DETAILS PAYLOAD button.\nStep 2. Hit INITIATE button.\nStep 3. Hit PROCEED button.\n\nRefer FAQ section for additional details."
+                android:text="@string/initiateDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -254,10 +255,11 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="16dp">
 
             <TextView
-                android:text="Step 1. Hit GENERATE ORDER ID button.\nStep 2. Hit SIGN ORDER DETAILS PAYLOAD button.\nStep 3. Hit PROCESS button.\nHit INPUT button to check input passed and OUTPUT button to check signed input under SIGN ORDER DETAILS PAYLOAD. \nHit INPUT button to check process input under PROCESS.\n\nRefer FAQ section for additional details."
+                android:text="@string/processDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

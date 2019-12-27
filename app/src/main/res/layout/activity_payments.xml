@@ -58,7 +58,7 @@
                 android:onClick="signSignaturePayload"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sign Initiate Payload"/>
+                android:text="Sign Customer Details Payload"/>
 
         </LinearLayout>
 
@@ -109,6 +109,17 @@
             android:layout_marginVertical="16dp"
             android:layout_height="1dp"
             android:background="@color/colorPrimary" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="Hit INPUT button to refer the input given and OUTPUT button to look into Signed input.\nStep 1. Hit SIGN CUSTOMER DETAILS PAYLOAD button.\nStep 2. Hit INITIATE button.\nStep 3. Hit PROCEED button.\n\nRefer FAQ section for additional details."
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -189,7 +200,7 @@
                 android:onClick="signOrderDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sign Process Payload"/>
+                android:text="Sign Order Details Payload"/>
 
         </LinearLayout>
 
@@ -240,6 +251,17 @@
             android:layout_marginVertical="16dp"
             android:layout_height="1dp"
             android:background="@color/colorPrimary" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="Step 1. Hit GENERATE ORDER ID button.\nStep 2. Hit SIGN ORDER DETAILS PAYLOAD button.\nStep 3. Hit PROCESS button.\nHit INPUT button to check input passed and OUTPUT button to check signed input under SIGN ORDER DETAILS PAYLOAD. \nHit INPUT button to check process input under PROCESS.\n\nRefer FAQ section for additional details."
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
 
 
     </LinearLayout>

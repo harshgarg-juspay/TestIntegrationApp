@@ -3,18 +3,24 @@ package com.example.testintegrationapp;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.text.Html;
 import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.core.content.ContextCompat;
+
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class UiUtils {
 
-    public static void showMessageInModal(Context cont, String header, String message){
+    private static final String BASE_URL = "https://hyperwidget-ppconfig.herokuapp.com/faq/";
+
+    public static void showMessageInModal(Context cont, String header, String message) {
         new MaterialAlertDialogBuilder(cont)
                 .setTitle(header)
                 .setMessage(message)
@@ -22,7 +28,7 @@ public class UiUtils {
                 .show();
     }
 
-    public static void generateCards(Context cont, Drawable image){
+    public static void generateCards(Context cont, Drawable image) {
 
         MaterialCardView materialCard = new MaterialCardView(cont);
         materialCard.setMinimumHeight(80);
@@ -59,5 +65,13 @@ public class UiUtils {
         Intent i = new Intent(context, WebViewActivity.class);
         i.putExtra("path", path);
         context.startActivity(i);
+    }
+
+    public static void launchInCustomTab(Context context, String path) {
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        builder.setToolbarColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        CustomTabsIntent customTabsIntent = builder.build();
+        Uri url = Uri.parse(BASE_URL + path);
+        customTabsIntent.launchUrl(context, url);
     }
 }

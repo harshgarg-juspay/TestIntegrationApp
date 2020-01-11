@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Home Page</string>
+    <string name="app_name">Integration Assistant</string>
     <string name="title_home">Home</string>
     <string name="input">Input</string>
     <string name="output">Output</string>
@@ -28,4 +28,5 @@
         \nHit INPUT button to check process input under PROCESS.
         \n\nRefer FAQ section for additional details.
     </string>
+    <bool name="godel_debuggable">true</bool>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.testintegrationapp;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -63,7 +64,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showPrefetchFAQ(View view) {
-        UiUtils.openWebView(this, "prefetch");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            UiUtils.launchInCustomTab(this, "prefetch");
+        } else {
+            UiUtils.openWebView(this, "prefetch");
+        }
     }
 
 //    public void showCaseDemo(View view){

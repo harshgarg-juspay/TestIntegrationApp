@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".PaymentsActivity">
 
     <LinearLayout
         android:id="@+id/initiateLayout"
-        android:orientation="vertical"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_marginVertical="16dp"
             android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
             android:background="@color/colorPrimary" />
 
         <LinearLayout
@@ -31,23 +30,23 @@
                 android:layout_height="wrap_content">
 
                 <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
                     android:onClick="showInitiateSigningInput"
-                    android:text="@string/input"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="12dp"/>
+                    android:text="@string/input" />
 
                 <Button
-                    android:onClick="showInitiateSigningOutput"
-                    android:text="@string/output"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="12dp"/>
+                    android:layout_marginEnd="12dp"
+                    android:onClick="showInitiateSigningOutput"
+                    android:text="@string/output" />
 
                 <ImageView
-                    android:onClick="showSigningFAQ"
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
+                    android:onClick="showSigningFAQ"
                     android:padding="2dp"
                     android:src="@drawable/ic_faq" />
 
@@ -55,18 +54,18 @@
             </LinearLayout>
 
             <Button
-                android:onClick="signSignaturePayload"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sign Customer Details Payload"/>
+                android:onClick="signSignaturePayload"
+                android:text="Sign Customer Details Payload" />
 
         </LinearLayout>
 
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_marginVertical="16dp"
             android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
             android:background="@color/colorPrimary" />
 
         <LinearLayout
@@ -80,16 +79,23 @@
                 android:layout_height="wrap_content">
 
                 <Button
-                    android:onClick="showInitiateInput"
-                    android:text="@string/input"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="12dp"/>
+                    android:layout_marginEnd="12dp"
+                    android:onClick="showInitiateInput"
+                    android:text="@string/input" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:onClick="showInitiateOutput"
+                    android:text="@string/output" />
 
                 <ImageView
-                    android:onClick="showInitiateFAQ"
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
+                    android:onClick="showInitiateFAQ"
                     android:padding="2dp"
                     android:src="@drawable/ic_faq" />
 
@@ -97,17 +103,44 @@
             </LinearLayout>
 
             <Button
-                android:onClick="initiateJuspaySdk"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Initiate"/>
+                android:onClick="initiateJuspaySdk"
+                android:text="Initiate" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_marginVertical="16dp"
             android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
+            android:background="@color/colorPrimary" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_weight="1.0"
+                android:onClick="terminateJuspaySdk"
+                android:text="Terminate" />
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:onClick="showTerminateFAQ"
+                android:padding="2dp"
+                android:src="@drawable/ic_faq" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
             android:background="@color/colorPrimary" />
 
         <LinearLayout
@@ -116,50 +149,64 @@
             android:padding="16dp">
 
             <TextView
-                android:text="@string/initiateDesc"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="@string/initiateDesc" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1.0"/>
+            android:layout_weight="1.0" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/proceed"
+            android:layout_margin="16dp"
             android:onClick="startProcessActivity"
-            android:layout_margin="16dp" />
+            android:text="@string/proceed" />
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/processLayout"
-        android:orientation="vertical"
-        android:visibility="visible"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_marginVertical="16dp"
             android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
             android:background="@color/colorPrimary" />
 
-        <Button
-            android:onClick="generateOrderID"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:text="Generate Order ID"/>
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1.0"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:onClick="generateOrderID"
+                android:text="Generate Order ID" />
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:onClick="showOrderIdFAQ"
+                android:padding="2dp"
+                android:src="@drawable/ic_faq" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_marginVertical="16dp"
             android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
             android:background="@color/colorPrimary" />
 
 
@@ -174,23 +221,23 @@
                 android:layout_height="wrap_content">
 
                 <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
                     android:onClick="showProcessSigningInput"
-                    android:text="@string/input"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="12dp"/>
+                    android:text="@string/input" />
 
                 <Button
-                    android:onClick="showProcessSigningOutput"
-                    android:text="@string/output"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="12dp"/>
+                    android:layout_marginEnd="12dp"
+                    android:onClick="showProcessSigningOutput"
+                    android:text="@string/output" />
 
                 <ImageView
-                    android:onClick="showSigningFAQ"
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
+                    android:onClick="showSigningFAQ"
                     android:padding="2dp"
                     android:src="@drawable/ic_faq" />
 
@@ -198,18 +245,18 @@
             </LinearLayout>
 
             <Button
-                android:onClick="signOrderDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sign Order Details Payload"/>
+                android:onClick="signOrderDetails"
+                android:text="Sign Order Details Payload" />
 
         </LinearLayout>
 
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_marginVertical="16dp"
             android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
             android:background="@color/colorPrimary" />
 
         <LinearLayout
@@ -223,16 +270,23 @@
                 android:layout_height="wrap_content">
 
                 <Button
-                    android:onClick="showProcessInput"
-                    android:text="@string/input"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="12dp"/>
+                    android:layout_marginEnd="12dp"
+                    android:onClick="showProcessInput"
+                    android:text="@string/input" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:onClick="showProcessOutput"
+                    android:text="@string/output" />
 
                 <ImageView
-                    android:onClick="showProcessFAQ"
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
+                    android:onClick="showProcessFAQ"
                     android:padding="2dp"
                     android:src="@drawable/ic_faq" />
 
@@ -240,17 +294,44 @@
             </LinearLayout>
 
             <Button
-                android:onClick="processJuspaySdk"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Process"/>
+                android:onClick="processJuspaySdk"
+                android:text="Process" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_marginVertical="16dp"
             android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
+            android:background="@color/colorPrimary" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_weight="1.0"
+                android:onClick="terminateJuspaySdk"
+                android:text="Terminate" />
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:onClick="showTerminateFAQ"
+                android:padding="2dp"
+                android:src="@drawable/ic_faq" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
             android:background="@color/colorPrimary" />
 
         <LinearLayout
@@ -259,9 +340,9 @@
             android:padding="16dp">
 
             <TextView
-                android:text="@string/processDesc"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="@string/processDesc" />
 
         </LinearLayout>
 

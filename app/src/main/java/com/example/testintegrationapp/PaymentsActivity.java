@@ -1,5 +1,6 @@
 package com.example.testintegrationapp;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -32,6 +33,7 @@ public class PaymentsActivity extends AppCompatActivity {
 
     private boolean isSignaturePayloadSigned;
     private boolean isInitiateDone;
+    private JSONObject initiateResult;
 
     private LinearLayout initiateLayout;
 
@@ -46,6 +48,8 @@ public class PaymentsActivity extends AppCompatActivity {
 
     private boolean isOrderIDGenerated;
     private boolean isOrderDetailsSigned;
+    private boolean isProcessDone;
+    private JSONObject processResult;
 
     private LinearLayout processLayout;
 
@@ -59,7 +63,7 @@ public class PaymentsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_payments);
         Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(UiUtils.getWhiteText("Initiate"));
+        Objects.requireNonNull(getSupportActionBar()).setTitle(UiUtils.getWhiteText("Initiate"));
         WebView.setWebContentsDebuggingEnabled(true);
 
         generateSignaturePayload();
@@ -73,21 +77,25 @@ public class PaymentsActivity extends AppCompatActivity {
         juspayServices = new PaymentServices(this);
 
         isSignaturePayloadSigned = false;
+        isOrderIDGenerated = false;
         isOrderDetailsSigned = false;
         isInitiateDone = false;
+        isProcessDone = false;
         requestId = Payload.generateRequestId();
         orderId = "";
         initiateSignature = "";
+        initiateResult = new JSONObject();
         processSignature = "";
+        processResult = new JSONObject();
     }
 
     // Initiate Functions
 
-    public void generateSignaturePayload(){
+    public void generateSignaturePayload() {
         signaturePayload = Payload.generateSignaturePayload();
     }
 
-    public void generateInitiatePayload(){
+    public void generateInitiatePayload() {
         initiatePayload = Payload.generateInitiatePayload(signaturePayload, initiateSignature);
     }
 
@@ -120,7 +128,11 @@ public class PaymentsActivity extends AppCompatActivity {
     }
 
     public void showSigningFAQ(View view) {
-        UiUtils.openWebView(this, "signing");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            UiUtils.launchInCustomTab(this, "signing");
+        } else {
+            UiUtils.openWebView(this, "signing");
+        }
     }
 
     public void initiateJuspaySdk(View view) {
@@ -128,38 +140,47 @@ public class PaymentsActivity extends AppCompatActivity {
             if (isSignaturePayloadSigned) {
                 JSONObject payload = Payload.getPaymentsPayload(requestId, initiatePayload);
                 juspayServices.initiate(payload, new HyperPaymentsCallbackAdapter() {
-                            @Override
-                            public void onEvent(JSONObject data, JuspayResponseHandler juspayResponseHandler) {
-                                Log.d("Inside OnEvent ", "initiate");
-                                try {
-                                    String event = data.getString("event");
-                                    if(event.equals("show_loader")){
-                                        Log.d("jp","show_loader");
-                                    }
-                                    else if(event.equals("hide_loader")){
-                                        Log.d("jp", "hide_loader");
-                                    }
-                                    else if(event.equals("process_result")){
-                                        JSONObject response = data.optJSONObject("payload");
-                                        Log.d("jpResposne", response.toString());
-                                    }
-                                } catch (Exception e) {
-                                    Log.d("Came here", e.toString());
-                                    e.printStackTrace();
-                                }
+                    @Override
+                    public void onEvent(JSONObject data, JuspayResponseHandler juspayResponseHandler) {
+                        Log.d("Inside OnEvent ", "initiate");
+                        try {
+                            String event = data.getString("event");
+                            switch (event) {
+                                case "initiate_result":
+                                    isInitiateDone = true;
+                                    initiateResult = data;
+                                    Toast.makeText(PaymentsActivity.this, "Initiate Complete", Toast.LENGTH_SHORT).show();
+                                    Log.wtf("initiate_result", data.toString());
+                                    break;
+                                case "process_result":
+                                    isProcessDone = true;
+                                    processResult = data;
+                                    Objects.requireNonNull(getSupportActionBar()).show();
+                                    processLayout.setVisibility(View.VISIBLE);
+                                    Toast.makeText(PaymentsActivity.this, "Process Complete", Toast.LENGTH_SHORT).show();
+                                    Log.wtf("process_result", data.toString());
+                                    break;
+                                default:
+                                    Toast.makeText(PaymentsActivity.this, "Unknown Result", Toast.LENGTH_SHORT).show();
+                                    UiUtils.showMessageInModal(PaymentsActivity.this, "Unknown Result", data.toString());
+                                    Log.wtf(event, data.toString());
+                                    break;
                             }
-                        });
-                        isInitiateDone = true;
-                Toast.makeText(this, "Initiate Complete", Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            Log.d("Came here", e.toString());
+                            e.printStackTrace();
+                        }
+                    }
+                });
             } else {
                 Snackbar.make(view, "Please sign the payload", Snackbar.LENGTH_SHORT).show();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void showInitiateInput(View view){
+    public void showInitiateInput(View view) {
         try {
             if (isSignaturePayloadSigned) {
                 JSONObject payload = Payload.getPaymentsPayload(requestId, initiatePayload);
@@ -167,14 +188,26 @@ public class PaymentsActivity extends AppCompatActivity {
             } else {
                 Snackbar.make(view, "Sign the payload first", Snackbar.LENGTH_SHORT).show();
             }
-        } catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public void startProcessActivity(View view){
-        if(isInitiateDone){
-            getSupportActionBar().setTitle(UiUtils.getWhiteText("Process"));
+    public void showInitiateOutput(View view) {
+        try {
+            if (isInitiateDone) {
+                UiUtils.showMessageInModal(this, "Initiate Result", initiateResult.toString(4));
+            } else {
+                Snackbar.make(view, "Initiate not completed yet!", Snackbar.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void startProcessActivity(View view) {
+        if (isInitiateDone) {
+            Objects.requireNonNull(getSupportActionBar()).setTitle(UiUtils.getWhiteText("Process"));
             initiateLayout.setVisibility(View.GONE);
             processLayout.setVisibility(View.VISIBLE);
         } else {
@@ -184,7 +217,11 @@ public class PaymentsActivity extends AppCompatActivity {
     }
 
     public void showInitiateFAQ(View view) {
-        UiUtils.openWebView(this, "initiate");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            UiUtils.launchInCustomTab(this, "initiate");
+        } else {
+            UiUtils.openWebView(this, "initiate");
+        }
     }
 
     // Process Functions
@@ -194,6 +231,14 @@ public class PaymentsActivity extends AppCompatActivity {
         isOrderIDGenerated = true;
         Toast.makeText(this, "Order ID Generated: " + orderId, Toast.LENGTH_LONG).show();
         generateOrderDetails();
+    }
+
+    public void showOrderIdFAQ(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            UiUtils.launchInCustomTab(this, "orderID");
+        } else {
+            UiUtils.openWebView(this, "orderID");
+        }
     }
 
     public void generateOrderDetails() {
@@ -253,6 +298,18 @@ public class PaymentsActivity extends AppCompatActivity {
         }
     }
 
+    public void showProcessOutput(View view) {
+        try {
+            if (isProcessDone) {
+                UiUtils.showMessageInModal(this, "Process Result", processResult.toString(4));
+            } else {
+                Snackbar.make(view, "Process not completed yet!", Snackbar.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void processJuspaySdk(View view) {
         if (isOrderDetailsSigned) {
             JSONObject payload = Payload.getPaymentsPayload(requestId, processPayload);
@@ -264,15 +321,48 @@ public class PaymentsActivity extends AppCompatActivity {
     }
 
     public void showProcessFAQ(View view) {
-        UiUtils.openWebView(this, "process");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            UiUtils.launchInCustomTab(this, "process");
+        } else {
+            UiUtils.openWebView(this, "process");
+        }
+    }
+
+    public void terminateJuspaySdk(View view) {
+        juspayServices.terminate();
+        Toast.makeText(this, "Juspay SDK terminated", Toast.LENGTH_LONG).show();
+
+        isSignaturePayloadSigned = false;
+        isInitiateDone = false;
+
+        isOrderIDGenerated = false;
+        isOrderDetailsSigned = false;
+        isProcessDone = false;
+
+        processLayout.setVisibility(View.GONE);
+        initiateLayout.setVisibility(View.VISIBLE);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(UiUtils.getWhiteText("Initiate"));
+    }
+
+    public void showTerminateFAQ(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            UiUtils.launchInCustomTab(this, "terminate");
+        } else {
+            UiUtils.openWebView(this, "terminate");
+        }
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         boolean backPressHandled = juspayServices.onBackPressed();
         if (!backPressHandled) {
-            juspayServices.terminate();
-            super.onBackPressed();
+            if (processLayout.getVisibility() == View.VISIBLE) {
+                processLayout.setVisibility(View.GONE);
+                initiateLayout.setVisibility(View.VISIBLE);
+                Objects.requireNonNull(getSupportActionBar()).setTitle(UiUtils.getWhiteText("Initiate"));
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -285,7 +375,6 @@ public class PaymentsActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
 
 }

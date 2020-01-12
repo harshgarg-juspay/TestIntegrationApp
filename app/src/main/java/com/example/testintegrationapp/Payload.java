@@ -1,11 +1,14 @@
 package com.example.testintegrationapp;
 
+import android.text.TextUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.UUID;
 
 public class Payload {
 
@@ -103,7 +106,13 @@ public class Payload {
     }
 
     public static String generateRequestId() {
-        return "X" + (long) (Math.random() * 10000000000L);
+        String[] uuid = UUID.randomUUID().toString().split("-");
+        for (int i = 0; i < uuid.length; i++) {
+            if (i % 2 != 0) {
+                uuid[i] = uuid[i].toUpperCase();
+            }
+        }
+        return TextUtils.join("-", uuid);
     }
 
     public static String generateOrderId() {

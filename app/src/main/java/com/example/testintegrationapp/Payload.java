@@ -21,7 +21,7 @@ public class Payload {
             signaturePayload.put("mobile_number", PayloadConstants.mobileNumber);
             signaturePayload.put("email_address", PayloadConstants.emailAddress);
             signaturePayload.put("customer_id", PayloadConstants.customerId);
-            signaturePayload.put("time_stamp", getTimeStamp());
+            signaturePayload.put("timestamp", getTimeStamp());
             signaturePayload.put("merchant_id", PayloadConstants.merchantId);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -54,7 +54,7 @@ public class Payload {
             orderDetails.put("mobile_number", PayloadConstants.mobileNumber);
             orderDetails.put("email_address", PayloadConstants.emailAddress);
             orderDetails.put("customer_id", PayloadConstants.customerId);
-            orderDetails.put("time_stamp", getTimeStamp());
+            orderDetails.put("timestamp", getTimeStamp());
             orderDetails.put("merchant_id", PayloadConstants.merchantId);
             orderDetails.put("amount", PayloadConstants.amount);
             orderDetails.put("return_url", PayloadConstants.returnUrl);

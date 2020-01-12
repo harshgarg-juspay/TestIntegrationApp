@@ -339,6 +339,8 @@ public class PaymentsActivity extends AppCompatActivity {
         isOrderDetailsSigned = false;
         isProcessDone = false;
 
+        requestId = Payload.generateRequestId();
+
         processLayout.setVisibility(View.GONE);
         initiateLayout.setVisibility(View.VISIBLE);
         Objects.requireNonNull(getSupportActionBar()).setTitle(UiUtils.getWhiteText("Initiate"));

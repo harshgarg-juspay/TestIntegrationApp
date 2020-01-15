@@ -71,22 +71,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    public void showCaseDemo(View view){
-//        try {
-//            ViewTarget target = new ViewTarget(R.id.show_case_btn, this);
-//            new ShowcaseView.Builder(this)
-//                    .setStyle(R.style.CustomShowcaseTheme2)
-//                    .setTarget(target)
-//                    .setContentTitle("Juspay Function Caller")
-//                    .setContentText("Use this button to do Prefetch, Initiate & Process Calls")
-//                    .hideOnTouchOutside()
-//                    .build();
-//        } catch (Exception e){
-//            e.printStackTrace();
-//            Toast.makeText(this, "Error", Toast.LENGTH_LONG).show();
-//        }
-//    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

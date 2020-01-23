@@ -123,12 +123,12 @@ public class Payload {
 
         final public static String service = "in.juspay.hyperpay";
 
-        final public static String mobileNumber = "9876543210";
+        final public static String mobileNumber = "987654321";
         final public static String clientId = "idea_android";
-        final public static String firstName = "Test";
-        final public static String lastName = "User";
-        final public static String emailAddress = "test@juspay.in";
-        final public static String customerId = "9876543210";
+        final public static String firstName = "abc";
+        final public static String lastName = "def";
+        final public static String emailAddress = "xyz@juspay.in";
+        final public static String customerId = "987654321";
         final public static String merchantId = "idea_preprod";
 
         final public static String init_action = "initiate";

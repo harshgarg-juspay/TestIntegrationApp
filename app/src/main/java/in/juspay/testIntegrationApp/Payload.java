@@ -123,6 +123,13 @@ public class Payload {
     static void setDefaultsIfNotPresent(SharedPreferences preferences) {
         SharedPreferences.Editor editor = preferences.edit();
 
+        if (!preferences.contains("clientIdPrefetch")) {
+            editor.putString("clientIdPrefetch", PayloadConstants.clientId);
+        }
+        if (!preferences.contains("betaAssetsPrefetch")) {
+            editor.putBoolean("betaAssetsPrefetch", PayloadConstants.betaAssets);
+        }
+
         if (!preferences.contains("firstName")) {
             editor.putString("firstName", PayloadConstants.firstName);
         }

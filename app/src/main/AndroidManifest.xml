@@ -13,20 +13,25 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
 
-        <activity android:name="in.juspay.testIntegrationApp.WebViewActivity" />
+        <activity
+            android:name=".ConfigureActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity android:name=".WebViewActivity" />
 
         <activity
-            android:name="in.juspay.testIntegrationApp.SettingsActivity"
-            android:windowSoftInputMode="adjustResize"
+            android:name=".SettingsActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".PaymentsActivity"
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name="in.juspay.testIntegrationApp.PaymentsActivity"
-            android:theme="@style/AppTheme"/>
-
-        <activity
-            android:name="in.juspay.testIntegrationApp.MainActivity"
-            android:theme="@style/AppTheme" >
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.testintegrationapp">
+    package="in.juspay.testIntegrationApp">
 
     <application
         android:allowBackup="true"
@@ -13,17 +13,27 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
 
-        <activity android:name=".WebViewActivity" />
+        <activity android:name="in.juspay.testIntegrationApp.WebViewActivity" />
 
-        <activity android:name=".PaymentsActivity" />
+        <activity
+            android:name="in.juspay.testIntegrationApp.SettingsActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppTheme" />
 
-        <activity android:name=".MainActivity">
+        <activity
+            android:name="in.juspay.testIntegrationApp.PaymentsActivity"
+            android:theme="@style/AppTheme"/>
+
+        <activity
+            android:name="in.juspay.testIntegrationApp.MainActivity"
+            android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

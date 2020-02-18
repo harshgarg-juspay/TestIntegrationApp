@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light">
@@ -9,54 +9,35 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:colorBackground">@color/backgroundColor</item>
         <item name="textAppearanceHeadline1">@color/textAppColor</item>
+
+        <item name="buttonStyle">@style/ButtonTheme</item>
+        <item name="spinnerStyle">@style/SpinnerTheme</item>
+        <item name="android:spinnerItemStyle">@style/SpinnerItemStyle</item>
     </style>
 
-    <style name="CustomShowcaseTheme" parent="ShowcaseView.Light">
-        <item name="sv_backgroundColor">#3300A621</item>
-        <item name="sv_showcaseColor">#00801A</item>
-        <item name="sv_buttonText">Hide</item>
-        <item name="sv_tintButtonColor">false</item>
-        <item name="sv_titleTextAppearance">@style/CustomTitle</item>
+    <!-- Button theme. -->
+    <style name="ButtonTheme" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:colorButtonNormal" tools:targetApi="lollipop">@color/colorPrimary</item>
+        <item name="android:colorControlHighlight" tools:targetApi="lollipop">@color/colorAccent
+        </item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:padding">20dp</item>
     </style>
 
-    <style name="CustomShowcaseTheme2" parent="ShowcaseView">
-        <item name="sv_backgroundColor">#E54671F0</item>
-        <item name="sv_showcaseColor">#346FCC</item>
-        <item name="sv_buttonText">Close</item>
-        <item name="sv_tintButtonColor">false</item>
-        <item name="sv_titleTextAppearance">@style/CustomTitle2</item>
-        <item name="sv_detailTextAppearance">@style/CustomText2</item>
+    <!-- EditText theme. -->
+    <style name="EditTextTheme" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@color/editTextBackground</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="android:padding">10dp</item>
     </style>
 
-    <style name="CustomShowcaseTheme3" parent="ShowcaseView.Light">
-        <item name="sv_backgroundColor">#c8ed680f</item>
-        <item name="sv_showcaseColor">#ed680f</item>
-        <item name="sv_buttonText">Hide</item>
-        <item name="sv_tintButtonColor">false</item>
-        <item name="sv_titleTextAppearance">@style/CustomTitle2</item>
-        <item name="sv_detailTextAppearance">@style/CustomText2</item>
+    <!-- Spinner theme. -->
+    <style name="SpinnerTheme" parent="Widget.AppCompat.Spinner">
+        <item name="android:background">@drawable/spinner_bg</item>
     </style>
 
-    <style name="CustomTitle" parent="TextAppearance.ShowcaseView.Title">
-        <item name="android:textColor">#00801A</item>
+    <style name="SpinnerItemStyle" parent="Widget.AppCompat.TextView.SpinnerItem">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
     </style>
 
-    <style name="CustomTitle2" parent="TextAppearance.ShowcaseView.Title.Light">
-        <item name="android:textColor">#ffffff</item>
-    </style>
-
-    <style name="CustomText2" parent="TextAppearance.ShowcaseView.Detail.Light">
-        <item name="android:textColor">#ffffff</item>
-    </style>
-
-    <style name="ListItemBigtext">
-        <item name="android:textColor">#25467A</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
-        <item name="android:textStyle">italic</item>
-    </style>
-
-    <style name="ListItemSubtext">
-        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
-        <item name="android:textColor">?android:attr/textColorSecondary</item>
-    </style>
 </resources>

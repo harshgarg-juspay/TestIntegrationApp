@@ -1,4 +1,4 @@
-package com.example.testintegrationapp;
+package in.juspay.testIntegrationApp;
 
 import androidx.appcompat.app.AppCompatActivity;
 

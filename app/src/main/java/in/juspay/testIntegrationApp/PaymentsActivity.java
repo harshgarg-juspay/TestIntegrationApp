@@ -1,14 +1,19 @@
-package com.example.testintegrationapp;
+package in.juspay.testIntegrationApp;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -24,6 +29,9 @@ import in.juspay.godel.ui.HyperPaymentsCallbackAdapter;
 import in.juspay.services.PaymentServices;
 
 public class PaymentsActivity extends AppCompatActivity {
+
+    private static final int SETTINGS_ACTIVITY_REQ_CODE = 420;
+    private SharedPreferences preferences;
 
     // Variables for initiate
     private JSONObject signaturePayload;
@@ -56,53 +64,77 @@ public class PaymentsActivity extends AppCompatActivity {
     // Payment services
     private PaymentServices juspayServices;
     private String requestId;
+    private String signURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payments);
-        Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        Objects.requireNonNull(getSupportActionBar()).setTitle(UiUtils.getWhiteText("Initiate"));
+
         WebView.setWebContentsDebuggingEnabled(true);
 
-        generateSignaturePayload();
+        preferences = getSharedPreferences(Payload.PayloadConstants.SHARED_PREF_KEY, MODE_PRIVATE);
 
+        prepareUI();
+        initializeParams();
+
+        juspayServices = new PaymentServices(this);
+    }
+
+    private void prepareUI() {
         initiateLayout = findViewById(R.id.initiateLayout);
         processLayout = findViewById(R.id.processLayout);
 
         initiateLayout.setVisibility(View.VISIBLE);
         processLayout.setVisibility(View.GONE);
 
-        juspayServices = new PaymentServices(this);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(UiUtils.getWhiteText("Initiate"));
+        }
+    }
+
+    private void initializeParams() {
+        requestId = Payload.generateRequestId();
+        signURL = preferences.getString("signatureURL", Payload.PayloadConstants.signatureURL);
+
+        generateSignaturePayload();
 
         isSignaturePayloadSigned = false;
-        isOrderIDGenerated = false;
-        isOrderDetailsSigned = false;
-        isInitiateDone = false;
-        isProcessDone = false;
-        requestId = Payload.generateRequestId();
-        orderId = "";
         initiateSignature = "";
+        isInitiateDone = false;
         initiateResult = new JSONObject();
+
+        isOrderIDGenerated = false;
+        orderId = "";
+        isOrderDetailsSigned = false;
         processSignature = "";
+        isProcessDone = false;
         processResult = new JSONObject();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     // Initiate Functions
 
     public void generateSignaturePayload() {
-        signaturePayload = Payload.generateSignaturePayload();
+        signaturePayload = Payload.generateSignaturePayload(preferences);
     }
 
     public void generateInitiatePayload() {
-        initiatePayload = Payload.generateInitiatePayload(signaturePayload, initiateSignature);
+        initiatePayload = Payload.generateInitiatePayload(preferences, signaturePayload, initiateSignature);
     }
 
     public void signSignaturePayload(View view) {
         try {
             SignatureAPI signatureAPI = new SignatureAPI();
-            initiateSignature = signatureAPI.execute(signaturePayload.toString()).get();
+            initiateSignature = signatureAPI.execute(signURL, signaturePayload.toString()).get();
             isSignaturePayloadSigned = true;
             Toast.makeText(this, "Payload signed", Toast.LENGTH_SHORT).show();
             generateInitiatePayload();
@@ -128,7 +160,7 @@ public class PaymentsActivity extends AppCompatActivity {
     }
 
     public void showSigningFAQ(View view) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             UiUtils.launchInCustomTab(this, "signing");
         } else {
             UiUtils.openWebView(this, "signing");
@@ -138,7 +170,7 @@ public class PaymentsActivity extends AppCompatActivity {
     public void initiateJuspaySdk(View view) {
         try {
             if (isSignaturePayloadSigned) {
-                JSONObject payload = Payload.getPaymentsPayload(requestId, initiatePayload);
+                JSONObject payload = Payload.getPaymentsPayload(preferences, requestId, initiatePayload);
                 juspayServices.initiate(payload, new HyperPaymentsCallbackAdapter() {
                     @Override
                     public void onEvent(JSONObject data, JuspayResponseHandler juspayResponseHandler) {
@@ -183,7 +215,7 @@ public class PaymentsActivity extends AppCompatActivity {
     public void showInitiateInput(View view) {
         try {
             if (isSignaturePayloadSigned) {
-                JSONObject payload = Payload.getPaymentsPayload(requestId, initiatePayload);
+                JSONObject payload = Payload.getPaymentsPayload(preferences, requestId, initiatePayload);
                 UiUtils.showMessageInModal(this, "Initiate Input", payload.toString(4));
             } else {
                 Snackbar.make(view, "Sign the payload first", Snackbar.LENGTH_SHORT).show();
@@ -217,7 +249,7 @@ public class PaymentsActivity extends AppCompatActivity {
     }
 
     public void showInitiateFAQ(View view) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             UiUtils.launchInCustomTab(this, "initiate");
         } else {
             UiUtils.openWebView(this, "initiate");
@@ -233,8 +265,17 @@ public class PaymentsActivity extends AppCompatActivity {
         generateOrderDetails();
     }
 
+    public void copyOrderID(View view) {
+        if (isOrderIDGenerated) {
+            UiUtils.copyToClipBoard(this, "OrderID", orderId);
+            Toast.makeText(this, "OrderID copied to clipboard: " + orderId, Toast.LENGTH_SHORT).show();
+        } else {
+            Snackbar.make(view, "Generate an order id", Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
     public void showOrderIdFAQ(View view) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             UiUtils.launchInCustomTab(this, "orderID");
         } else {
             UiUtils.openWebView(this, "orderID");
@@ -242,14 +283,14 @@ public class PaymentsActivity extends AppCompatActivity {
     }
 
     public void generateOrderDetails() {
-        orderDetails = Payload.generateOrderDetails(orderId);
+        orderDetails = Payload.generateOrderDetails(preferences, orderId);
     }
 
     public void signOrderDetails(View view) {
         if (isOrderIDGenerated) {
             try {
                 SignatureAPI signatureAPI = new SignatureAPI();
-                processSignature = signatureAPI.execute(orderDetails.toString()).get();
+                processSignature = signatureAPI.execute(signURL, orderDetails.toString()).get();
                 isOrderDetailsSigned = true;
                 Toast.makeText(this, "Signed Order Details", Toast.LENGTH_SHORT).show();
                 generateProcessPayload();
@@ -282,13 +323,13 @@ public class PaymentsActivity extends AppCompatActivity {
     }
 
     public void generateProcessPayload() {
-        processPayload = Payload.generateProcessPayload(orderId, orderDetails, processSignature);
+        processPayload = Payload.generateProcessPayload(preferences, orderId, orderDetails, processSignature);
     }
 
     public void showProcessInput(View view) {
         try {
             if (isOrderDetailsSigned) {
-                JSONObject payload = Payload.getPaymentsPayload(requestId, processPayload);
+                JSONObject payload = Payload.getPaymentsPayload(preferences, requestId, processPayload);
                 UiUtils.showMessageInModal(this, "Process Input", payload.toString(4));
             } else {
                 Snackbar.make(view, "Please sign the order details first", Snackbar.LENGTH_SHORT).show();
@@ -312,7 +353,7 @@ public class PaymentsActivity extends AppCompatActivity {
 
     public void processJuspaySdk(View view) {
         if (isOrderDetailsSigned) {
-            JSONObject payload = Payload.getPaymentsPayload(requestId, processPayload);
+            JSONObject payload = Payload.getPaymentsPayload(preferences, requestId, processPayload);
             juspayServices.process(payload);
             Objects.requireNonNull(getSupportActionBar()).hide();
         } else {
@@ -321,33 +362,26 @@ public class PaymentsActivity extends AppCompatActivity {
     }
 
     public void showProcessFAQ(View view) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             UiUtils.launchInCustomTab(this, "process");
         } else {
             UiUtils.openWebView(this, "process");
         }
     }
 
+    private void reset() {
+        prepareUI();
+        initializeParams();
+    }
+
     public void terminateJuspaySdk(View view) {
-        juspayServices.terminate();
         Toast.makeText(this, "Juspay SDK terminated", Toast.LENGTH_LONG).show();
-
-        isSignaturePayloadSigned = false;
-        isInitiateDone = false;
-
-        isOrderIDGenerated = false;
-        isOrderDetailsSigned = false;
-        isProcessDone = false;
-
-        requestId = Payload.generateRequestId();
-
-        processLayout.setVisibility(View.GONE);
-        initiateLayout.setVisibility(View.VISIBLE);
-        Objects.requireNonNull(getSupportActionBar()).setTitle(UiUtils.getWhiteText("Initiate"));
+        juspayServices.terminate();
+        reset();
     }
 
     public void showTerminateFAQ(View view) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             UiUtils.launchInCustomTab(this, "terminate");
         } else {
             UiUtils.openWebView(this, "terminate");
@@ -371,6 +405,10 @@ public class PaymentsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.configure:
+                Intent intent = new Intent(PaymentsActivity.this, SettingsActivity.class);
+                startActivityForResult(intent, SETTINGS_ACTIVITY_REQ_CODE, new Bundle());
+                return true;
             case android.R.id.home:
                 onBackPressed();
             default:
@@ -378,5 +416,17 @@ public class PaymentsActivity extends AppCompatActivity {
         }
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == SETTINGS_ACTIVITY_REQ_CODE) {
+            if (data != null) {
+                if (data.hasExtra("changed") && data.getBooleanExtra("changed", false)) {
+                    Toast.makeText(this, "Resetting due to change in parameters", Toast.LENGTH_SHORT).show();
+                    reset();
+                }
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 }

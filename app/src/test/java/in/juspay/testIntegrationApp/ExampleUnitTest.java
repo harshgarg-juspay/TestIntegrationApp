@@ -1,4 +1,4 @@
-package com.example.testintegrationapp;
+package in.juspay.testIntegrationApp;
 
 import org.junit.Test;
 

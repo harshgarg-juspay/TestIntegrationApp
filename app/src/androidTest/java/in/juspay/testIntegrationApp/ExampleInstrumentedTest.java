@@ -1,4 +1,4 @@
-package com.example.testintegrationapp;
+package in.juspay.testIntegrationApp;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("com.example.testintegrationapp", appContext.getPackageName());
+        assertEquals("in.juspay.testIntegrationApp", appContext.getPackageName());
     }
 }

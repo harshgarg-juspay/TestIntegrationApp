@@ -1,5 +1,6 @@
 package in.juspay.testIntegrationApp;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -36,6 +37,12 @@ public class ConfigureActivity extends AppCompatActivity {
     private void prepareUI() {
         ButterKnife.bind(this);
 
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setTitle(UiUtils.getWhiteText("Configuration"));
+        }
+
         clientId.setText(preferences.getString("clientIdPrefetch", Payload.PayloadConstants.clientId));
         betaAssets.setChecked(preferences.getBoolean("betaAssetsPrefetch", Payload.PayloadConstants.betaAssets));
 
@@ -46,7 +53,7 @@ public class ConfigureActivity extends AppCompatActivity {
     protected void clientIdChanged(CharSequence clientId) {
         hasChanged = true;
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("clientId", clientId.toString());
+        editor.putString("clientIdPrefetch", clientId.toString());
         editor.apply();
     }
 

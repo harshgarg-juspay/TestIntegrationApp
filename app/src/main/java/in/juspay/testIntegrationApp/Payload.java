@@ -62,6 +62,14 @@ public class Payload {
             orderDetails.put("merchant_id", preferences.getString("merchantId", PayloadConstants.merchantId));
             orderDetails.put("amount", preferences.getString("amount", PayloadConstants.amount));
             orderDetails.put("return_url", PayloadConstants.returnUrl);
+            orderDetails.put("mandate_max_amount", "1.0");
+            orderDetails.put("description", "Get pro for Rs. 0.33/mo for 3 months");
+            orderDetails.put("options.create_mandate", "OPTIONAL");
+            orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_EXPIRY_DATE", "2020-12-30");
+            orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_FREQUENCY_UNIT", "MONTH");
+            orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_FREQUENCY", "2");
+            orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_START_DATE", "2020-02-19");
+            orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_GRACE_DAYS", "0");
         } catch (JSONException e) {
             e.printStackTrace();
         }

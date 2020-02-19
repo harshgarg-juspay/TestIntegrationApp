@@ -24,9 +24,9 @@ import org.json.JSONObject;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
-import in.juspay.godel.data.JuspayResponseHandler;
-import in.juspay.godel.ui.HyperPaymentsCallbackAdapter;
-import in.juspay.services.PaymentServices;
+import in.juspay.hypersdk.data.JuspayResponseHandler;
+import in.juspay.hypersdk.ui.HyperPaymentsCallbackAdapter;
+import in.juspay.services.HyperServices;
 
 public class PaymentsActivity extends AppCompatActivity {
 
@@ -62,7 +62,7 @@ public class PaymentsActivity extends AppCompatActivity {
     private LinearLayout processLayout;
 
     // Payment services
-    private PaymentServices juspayServices;
+    private HyperServices hyperServices;
     private String requestId;
     private String signURL;
 
@@ -78,7 +78,7 @@ public class PaymentsActivity extends AppCompatActivity {
         prepareUI();
         initializeParams();
 
-        juspayServices = new PaymentServices(this);
+        hyperServices = new HyperServices(this);
     }
 
     private void prepareUI() {
@@ -171,7 +171,7 @@ public class PaymentsActivity extends AppCompatActivity {
         try {
             if (isSignaturePayloadSigned) {
                 JSONObject payload = Payload.getPaymentsPayload(preferences, requestId, initiatePayload);
-                juspayServices.initiate(payload, new HyperPaymentsCallbackAdapter() {
+                hyperServices.initiate(payload, new HyperPaymentsCallbackAdapter() {
                     @Override
                     public void onEvent(JSONObject data, JuspayResponseHandler juspayResponseHandler) {
                         Log.d("Inside OnEvent ", "initiate");
@@ -354,7 +354,7 @@ public class PaymentsActivity extends AppCompatActivity {
     public void processJuspaySdk(View view) {
         if (isOrderDetailsSigned) {
             JSONObject payload = Payload.getPaymentsPayload(preferences, requestId, processPayload);
-            juspayServices.process(payload);
+            hyperServices.process(payload);
             Objects.requireNonNull(getSupportActionBar()).hide();
         } else {
             Snackbar.make(view, "Please sign the payload", Snackbar.LENGTH_SHORT).show();
@@ -376,7 +376,7 @@ public class PaymentsActivity extends AppCompatActivity {
 
     public void terminateJuspaySdk(View view) {
         Toast.makeText(this, "Juspay SDK terminated", Toast.LENGTH_LONG).show();
-        juspayServices.terminate();
+        hyperServices.terminate();
         reset();
     }
 
@@ -390,7 +390,7 @@ public class PaymentsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        boolean backPressHandled = juspayServices.onBackPressed();
+        boolean backPressHandled = hyperServices.onBackPressed();
         if (!backPressHandled) {
             if (processLayout.getVisibility() == View.VISIBLE) {
                 processLayout.setVisibility(View.GONE);

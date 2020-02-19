@@ -17,7 +17,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import in.juspay.godel.PaymentActivity;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
+import in.juspay.services.HyperServices;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,14 +31,15 @@ public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences preferences;
     private boolean isPrefetchDone;
-
+    private JSONObject preFetchPayload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.isPrefetchDone = false;
+        this.isPrefetchDone = true;
+        preFetchPayload = new JSONObject();
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -45,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         preferences = getSharedPreferences(Payload.PayloadConstants.SHARED_PREF_KEY, MODE_PRIVATE);
         Payload.setDefaultsIfNotPresent(preferences);
-
+        constructPrefetchPayload();
     }
 
     @Override
@@ -55,6 +62,21 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", (dialog, which) -> MainActivity.super.onBackPressed())
                 .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
                 .show();
+    }
+
+
+    private void constructPrefetchPayload() {
+        String clientId = preferences.getString("clientIdPrefetch", Payload.PayloadConstants.clientId);
+        boolean useBetaAssets = preferences.getBoolean("betaAssetsPrefetch", Payload.PayloadConstants.betaAssets);
+        ArrayList<String> services = new ArrayList<>(Collections.singletonList("in.juspay.hyperpay"));
+
+        try {
+            preFetchPayload.put("clientId", clientId);
+            preFetchPayload.put("betaAssets", useBetaAssets);
+            preFetchPayload.put("services", services);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -68,18 +90,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startPrefetch(View view){
-
-        String clientId = preferences.getString("clientIdPrefetch", Payload.PayloadConstants.clientId);
-        boolean useBetaAssets = preferences.getBoolean("betaAssetsPrefetch", Payload.PayloadConstants.betaAssets);
-
-        PaymentActivity.preFetch(this, clientId, useBetaAssets);
-
+//        HyperServices.preFetch(this, preFetchPayload);
         this.isPrefetchDone = true;
-        Toast.makeText(this, "Prefetch Started", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Prefetch is temporarily disabled for now!", Toast.LENGTH_SHORT).show();
     }
 
     public void showPrefetchInput(View view){
-        UiUtils.showMessageInModal(this, "Prefetch","boolean useBetaAssets = false;\nString clientId =  \"clientId\";\n\nPaymentActivity.preFetch(activity, clientId,  useBetaAssets);");
+        try {
+            UiUtils.showMessageInModal(this, "Prefetch",preFetchPayload.toString(4));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public void showPrefetchFAQ(View view) {
@@ -116,7 +137,8 @@ public class MainActivity extends AppCompatActivity {
             if (data != null) {
                 if (data.hasExtra("changed") && data.getBooleanExtra("changed", false)) {
                     Toast.makeText(this, "Resetting due to change in parameters", Toast.LENGTH_SHORT).show();
-                    isPrefetchDone = false;
+                    isPrefetchDone = true;
+                    constructPrefetchPayload();
                 }
             }
         } else {

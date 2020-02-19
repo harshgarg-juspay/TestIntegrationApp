@@ -61,10 +61,13 @@ public class Payload {
             orderDetails.put("timestamp", getTimeStamp());
             orderDetails.put("merchant_id", preferences.getString("merchantId", PayloadConstants.merchantId));
             orderDetails.put("amount", preferences.getString("amount", PayloadConstants.amount));
+            String mandateType = preferences.getString("mandateOption", PayloadConstants.mandateOption);
+            if (!mandateType.equals("None")) {
+                orderDetails.put("options.create_mandate", mandateType);
+                orderDetails.put("mandate_max_amount", preferences.getString("mandateMaxAmount", PayloadConstants.mandateMaxAmount));
+            }
             orderDetails.put("return_url", PayloadConstants.returnUrl);
-            orderDetails.put("mandate_max_amount", "1.0");
             orderDetails.put("description", "Get pro for Rs. 0.33/mo for 3 months");
-            orderDetails.put("options.create_mandate", "OPTIONAL");
             orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_EXPIRY_DATE", "2020-12-30");
             orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_FREQUENCY_UNIT", "MONTH");
             orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_FREQUENCY", "2");
@@ -160,6 +163,13 @@ public class Payload {
             editor.putString("language", PayloadConstants.language);
         }
 
+        if (!preferences.contains("mandateOption")) {
+            editor.putString("mandateOption", PayloadConstants.mandateOption);
+        }
+        if (!preferences.contains("mandateMaxAmount")) {
+            editor.putString("mandateMaxAmount", PayloadConstants.mandateMaxAmount);
+        }
+
         if (!preferences.contains("merchantId")) {
             editor.putString("merchantId", PayloadConstants.merchantId);
         }
@@ -201,6 +211,9 @@ public class Payload {
         final public static String emailAddress = "test@juspay.in";
         final public static String customerId = "9876543210";
         final public static String merchantId = "hyper_beta";
+
+        final public static String mandateOption = "None";
+        final public static String mandateMaxAmount = "1.0";
 
         final public static String initAction = "initiate";
         final public static String processAction = "quickPay";

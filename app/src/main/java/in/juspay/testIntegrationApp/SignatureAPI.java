@@ -17,6 +17,7 @@ public class SignatureAPI extends AsyncTask<String, Integer, String> {
         try {
             String orderUrl = strings[0] + "?payload=" + strings[1];
             Log.wtf("SignedByHarsh", orderUrl);
+
             HttpsURLConnection connection = (HttpsURLConnection) (new URL(orderUrl).openConnection());
             connection.setRequestMethod("GET");
             InputStream in = connection.getInputStream();
@@ -29,6 +30,8 @@ public class SignatureAPI extends AsyncTask<String, Integer, String> {
                 result.append(curr);
                 data = ir.read();
             }
+
+            Log.wtf("SignedByHarsh", result.toString());
             return result.toString();
         } catch (Exception ignored) {
             return result.toString();

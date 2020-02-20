@@ -1,6 +1,7 @@
 package in.juspay.testIntegrationApp;
 
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.text.TextUtils;
 
 import org.json.JSONArray;
@@ -67,7 +68,11 @@ public class Payload {
                 orderDetails.put("mandate_max_amount", preferences.getString("mandateMaxAmount", PayloadConstants.mandateMaxAmount));
             }
             orderDetails.put("return_url", PayloadConstants.returnUrl);
-            orderDetails.put("description", "Get pro for Rs. 0.33/mo for 3 months");
+            String desc =  "Get pro for Rs.0.33/mo for 3months";
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP || Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+                desc = "GetproforRs.0.33/mofor3months";
+            }
+            orderDetails.put("description", desc);
             orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_EXPIRY_DATE", "2020-12-30");
             orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_FREQUENCY_UNIT", "MONTH");
             orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_FREQUENCY", "2");
@@ -205,19 +210,19 @@ public class Payload {
         final public static String service = "in.juspay.hyperpay";
 
         final public static String mobileNumber = "9876543210";
-        final public static String clientId = "hyper_beta_android";
+        final public static String clientId = "jiosaavn_android";
         final public static String firstName = "Test";
         final public static String lastName = "User";
         final public static String emailAddress = "test@juspay.in";
         final public static String customerId = "9876543210";
-        final public static String merchantId = "hyper_beta";
+        final public static String merchantId = "jiosaavn";
 
         final public static String mandateOption = "None";
         final public static String mandateMaxAmount = "1.0";
 
         final public static String initAction = "initiate";
-        final public static String processAction = "quickPay";
-        final public static String merchantKeyId = "2992";
+        final public static String processAction = "paymentPage";
+        final public static String merchantKeyId = "3164";
         final public static String environment = "sandbox";
 
         final public static String amount = "1.0";

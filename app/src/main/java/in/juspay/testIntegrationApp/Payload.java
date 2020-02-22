@@ -66,18 +66,16 @@ public class Payload {
             if (!mandateType.equals("None")) {
                 orderDetails.put("options.create_mandate", mandateType);
                 orderDetails.put("mandate_max_amount", preferences.getString("mandateMaxAmount", PayloadConstants.mandateMaxAmount));
+                orderDetails.put("mandate_type", "EMANDATE");
             }
             orderDetails.put("return_url", PayloadConstants.returnUrl);
-            String desc =  "Get pro for Rs.0.33/mo for 3months";
-            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP || Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
-                desc = "GetproforRs.0.33/mofor3months";
-            }
+            String desc =  "Get pro for Rs. 0.33/mo for 3 months";
             orderDetails.put("description", desc);
             orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_EXPIRY_DATE", "2020-12-30");
             orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_FREQUENCY_UNIT", "MONTH");
-            orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_FREQUENCY", "2");
-            orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_START_DATE", "2020-02-19");
-            orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_GRACE_DAYS", "0");
+//            orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_FREQUENCY", "2");
+//            orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_START_DATE", "2020-02-19");
+//            orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_GRACE_DAYS", "0");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -217,7 +215,7 @@ public class Payload {
         final public static String customerId = "9876543210";
         final public static String merchantId = "jiosaavn";
 
-        final public static String mandateOption = "None";
+        final public static String mandateOption = "OPTIONAL";
         final public static String mandateMaxAmount = "1.0";
 
         final public static String initAction = "initiate";

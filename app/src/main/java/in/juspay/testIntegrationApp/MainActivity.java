@@ -90,9 +90,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startPrefetch(View view){
-//        HyperServices.preFetch(this, preFetchPayload);
+        HyperServices.preFetch(this, preFetchPayload);
         this.isPrefetchDone = true;
-        Toast.makeText(this, "Prefetch is temporarily disabled for now!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Prefetch started!", Toast.LENGTH_SHORT).show();
     }
 
     public void showPrefetchInput(View view){

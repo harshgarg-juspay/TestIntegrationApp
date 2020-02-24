@@ -3,7 +3,7 @@ package in.juspay.testIntegrationApp;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import java.io.InputStream;
+import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 
@@ -17,18 +17,26 @@ public class SignatureAPI extends AsyncTask<String, Integer, String> {
         try {
             String orderUrl = strings[0] + "?payload=" + strings[1];
             Log.wtf("SignedByHarsh", orderUrl);
+
             HttpsURLConnection connection = (HttpsURLConnection) (new URL(orderUrl).openConnection());
             connection.setRequestMethod("GET");
-            InputStream in = connection.getInputStream();
-            InputStreamReader ir = new InputStreamReader(in);
 
-            int data = ir.read();
+            int respCode = connection.getResponseCode();
+            InputStreamReader respReader;
 
-            while (data != -1) {
-                char curr = (char) data;
-                result.append(curr);
-                data = ir.read();
+            if ((respCode < 200 || respCode >= 300) && respCode != 302) {
+                respReader = new InputStreamReader(connection.getErrorStream());
+            } else {
+                respReader = new InputStreamReader(connection.getInputStream());
             }
+
+            BufferedReader in = new BufferedReader(respReader);
+            String inputLine;
+
+            while ((inputLine = in.readLine()) != null) {
+                result.append(inputLine);
+            }
+
             return result.toString();
         } catch (Exception ignored) {
             return result.toString();

@@ -21,6 +21,8 @@ import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
@@ -134,7 +136,13 @@ public class PaymentsActivity extends AppCompatActivity {
     public void signSignaturePayload(View view) {
         try {
             SignatureAPI signatureAPI = new SignatureAPI();
-            initiateSignature = signatureAPI.execute(signURL, signaturePayload.toString()).get();
+            String payload;
+            try {
+                payload = URLEncoder.encode(signaturePayload.toString(), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                payload = signaturePayload.toString();
+            }
+            initiateSignature = signatureAPI.execute(signURL, payload).get();
             isSignaturePayloadSigned = true;
             Toast.makeText(this, "Payload signed", Toast.LENGTH_SHORT).show();
             generateInitiatePayload();
@@ -290,7 +298,13 @@ public class PaymentsActivity extends AppCompatActivity {
         if (isOrderIDGenerated) {
             try {
                 SignatureAPI signatureAPI = new SignatureAPI();
-                processSignature = signatureAPI.execute(signURL, orderDetails.toString()).get();
+                String payload;
+                try {
+                    payload = URLEncoder.encode(orderDetails.toString(), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    payload = orderDetails.toString();
+                }
+                processSignature = signatureAPI.execute(signURL, payload).get();
                 isOrderDetailsSigned = true;
                 Toast.makeText(this, "Signed Order Details", Toast.LENGTH_SHORT).show();
                 generateProcessPayload();
@@ -423,6 +437,7 @@ public class PaymentsActivity extends AppCompatActivity {
                 if (data.hasExtra("changed") && data.getBooleanExtra("changed", false)) {
                     Toast.makeText(this, "Resetting due to change in parameters", Toast.LENGTH_SHORT).show();
                     reset();
+                    hyperServices.terminate();
                 }
             }
         } else {

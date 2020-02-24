@@ -65,7 +65,7 @@ public class Payload {
             if (!mandateType.equals("None")) {
                 orderDetails.put("options.create_mandate", mandateType);
                 orderDetails.put("mandate_max_amount", preferences.getString("mandateMaxAmount", PayloadConstants.mandateMaxAmount));
-                orderDetails.put("mandate_type", "EMANDATE");
+                //orderDetails.put("mandate_type", "EMANDATE");
                 orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_EXPIRY_DATE", "2020-12-30");
                 orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_FREQUENCY_UNIT", "MONTH");
                 orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_FREQUENCY", "2");
@@ -101,6 +101,7 @@ public class Payload {
             processPayload.put("orderDetails", orderDetails.toString());
             processPayload.put("signature", signature);
             processPayload.put("language", preferences.getString("language", PayloadConstants.language));
+            processPayload.put("mandate_type", "EMANDATE");
         } catch (Exception e) {
             e.printStackTrace();
         }

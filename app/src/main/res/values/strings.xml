@@ -57,6 +57,8 @@
     <string name="amount">Amount</string>
     <string name="merchant_side_configurations">Merchant-Side Configurations</string>
     <string name="beta_assets">Beta Assets</string>
+    <string name="mandate_options">Mandate Options</string>
+    <string name="mandate_max_amount">Mandate Max Amount</string>
 
     <bool name="godel_debuggable">true</bool>
 </resources>

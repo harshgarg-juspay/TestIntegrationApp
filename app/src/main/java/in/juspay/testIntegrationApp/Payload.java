@@ -1,7 +1,6 @@
 package in.juspay.testIntegrationApp;
 
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.text.TextUtils;
 
 import org.json.JSONArray;
@@ -67,15 +66,15 @@ public class Payload {
                 orderDetails.put("options.create_mandate", mandateType);
                 orderDetails.put("mandate_max_amount", preferences.getString("mandateMaxAmount", PayloadConstants.mandateMaxAmount));
                 orderDetails.put("mandate_type", "EMANDATE");
+                orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_EXPIRY_DATE", "2020-12-30");
+                orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_FREQUENCY_UNIT", "MONTH");
+                orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_FREQUENCY", "2");
+                orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_START_DATE", "2020-02-19");
+                orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_GRACE_DAYS", "0");
             }
             orderDetails.put("return_url", PayloadConstants.returnUrl);
             String desc =  "Get pro for Rs. 0.33/mo for 3 months";
             orderDetails.put("description", desc);
-            orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_EXPIRY_DATE", "2020-12-30");
-            orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_FREQUENCY_UNIT", "MONTH");
-//            orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_FREQUENCY", "2");
-//            orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_START_DATE", "2020-02-19");
-//            orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_GRACE_DAYS", "0");
         } catch (JSONException e) {
             e.printStackTrace();
         }

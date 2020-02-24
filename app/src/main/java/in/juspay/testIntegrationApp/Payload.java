@@ -7,8 +7,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 public class Payload {
@@ -64,12 +68,15 @@ public class Payload {
             if (!mandateType.equals("None")) {
                 orderDetails.put("options.create_mandate", mandateType);
                 orderDetails.put("mandate_max_amount", preferences.getString("mandateMaxAmount", PayloadConstants.mandateMaxAmount));
-//                orderDetails.put("mandate_type", "EMANDATE");
-                orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_EXPIRY_DATE", "2020-12-30");
-                orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_FREQUENCY_UNIT", "MONTH");
-                orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_FREQUENCY", "2");
-                orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_START_DATE", "2020-02-19");
-                orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_GRACE_DAYS", "0");
+                orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_EXPIRY_DATE", "2020-12-30");
+                orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_FREQUENCY_UNIT", "MONTH");
+                orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_FREQUENCY", "2");
+                orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_GRACE_DAYS", "0");
+
+                Date c = Calendar.getInstance().getTime();
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                String formattedDate = df.format(c);
+                orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_START_DATE", formattedDate);
             }
             orderDetails.put("return_url", PayloadConstants.returnUrl);
             String desc =  "Get pro for Rs. 0.33/mo for 3 months";
@@ -100,8 +107,6 @@ public class Payload {
             processPayload.put("orderDetails", orderDetails.toString());
             processPayload.put("signature", signature);
             processPayload.put("language", preferences.getString("language", PayloadConstants.language));
-//            processPayload.put("mandate_type", "EMANDATE");
-//            processPayload.put("should_create_mandate", "true");
         } catch (Exception e) {
             e.printStackTrace();
         }

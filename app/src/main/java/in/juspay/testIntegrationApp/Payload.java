@@ -42,7 +42,6 @@ public class Payload {
             initiatePayload.put("signaturePayload", signaturePayload.toString());
             initiatePayload.put("signature", signature);
             initiatePayload.put("environment", preferences.getString("environment", PayloadConstants.environment));
-            initiatePayload.put("betaAssets", preferences.getBoolean("betaAssets", PayloadConstants.betaAssets));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,12 +64,12 @@ public class Payload {
             if (!mandateType.equals("None")) {
                 orderDetails.put("options.create_mandate", mandateType);
                 orderDetails.put("mandate_max_amount", preferences.getString("mandateMaxAmount", PayloadConstants.mandateMaxAmount));
-                //orderDetails.put("mandate_type", "EMANDATE");
-                orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_EXPIRY_DATE", "2020-12-30");
-                orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_FREQUENCY_UNIT", "MONTH");
-                orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_FREQUENCY", "2");
-                orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_START_DATE", "2020-02-19");
-                orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_GRACE_DAYS", "0");
+//                orderDetails.put("mandate_type", "EMANDATE");
+                orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_EXPIRY_DATE", "2020-12-30");
+                orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_FREQUENCY_UNIT", "MONTH");
+                orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_FREQUENCY", "2");
+                orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_START_DATE", "2020-02-19");
+                orderDetails.put("METADATA.PAYTM_V2:SUBSCRIPTION_GRACE_DAYS", "0");
             }
             orderDetails.put("return_url", PayloadConstants.returnUrl);
             String desc =  "Get pro for Rs. 0.33/mo for 3 months";
@@ -115,6 +114,7 @@ public class Payload {
             paymentsPayload.put("requestId", requestId);
             paymentsPayload.put("service", preferences.getString("service", PayloadConstants.service));
             paymentsPayload.put("payload", payload);
+            paymentsPayload.put("betaAssets", preferences.getBoolean("betaAssets", PayloadConstants.betaAssets));
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -102,6 +102,7 @@ public class Payload {
             processPayload.put("signature", signature);
             processPayload.put("language", preferences.getString("language", PayloadConstants.language));
             processPayload.put("mandate_type", "EMANDATE");
+            processPayload.put("should_create_mandate", "true");
         } catch (Exception e) {
             e.printStackTrace();
         }

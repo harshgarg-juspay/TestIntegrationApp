@@ -7,7 +7,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +25,7 @@ import butterknife.OnTextChanged;
 public class SettingsActivity extends AppCompatActivity {
 
 
-    private List<String> actions, languages;
+    private List<String> actions, languages, mandateOptions;
 
     @BindView(R.id.firstName)
     EditText firstName;
@@ -42,6 +41,11 @@ public class SettingsActivity extends AppCompatActivity {
     EditText amount;
     @BindView(R.id.languageSpinner)
     Spinner languageSpinner;
+
+    @BindView(R.id.mandateSpinner)
+    Spinner mandateSpinner;
+    @BindView(R.id.mandateMaxAmount)
+    EditText mandateMaxAmount;
 
     @BindView(R.id.merchantId)
     EditText merchantId;
@@ -64,7 +68,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 
     private boolean hasChanged;
-    private int languageSelected, actionSelected;
+    private int languageSelected, actionSelected, mandateSelected;
     private String env;
     SharedPreferences preferences;
 
@@ -88,14 +92,19 @@ public class SettingsActivity extends AppCompatActivity {
 
         actions = Arrays.asList("paymentPage", "addCard", "addAndLinkWallet", "nb", "upi", "delinkWallet", "quickPay", "emi");
         languages = Arrays.asList("English", "Hindi", "Tamil", "Malayalam", "Gujarati", "Marathi", "Telugu", "Bengali", "Kannada");
+        mandateOptions = Arrays.asList("None", "OPTIONAL", "REQUIRED");
 
         ArrayAdapter<String> widgetAdaptor = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, actions);
-        widgetAdaptor.setDropDownViewResource(android.R.layout.simple_expandable_list_item_1);
+        widgetAdaptor.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         actionSpinner.setAdapter(widgetAdaptor);
 
         ArrayAdapter<String> languageAdaptor = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, languages);
         languageAdaptor.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         languageSpinner.setAdapter(languageAdaptor);
+
+        ArrayAdapter<String> mandateAdaptor = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mandateOptions);
+        mandateAdaptor.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mandateSpinner.setAdapter(mandateAdaptor);
 
         firstName.setText(preferences.getString("firstName", Payload.PayloadConstants.firstName));
         lastName.setText(preferences.getString("lastName", Payload.PayloadConstants.lastName));
@@ -107,6 +116,12 @@ public class SettingsActivity extends AppCompatActivity {
         if (languageSelected != -1) {
             languageSpinner.setSelection(languageSelected);
         }
+
+        mandateSelected = mandateOptions.indexOf(preferences.getString("mandateOption", Payload.PayloadConstants.mandateOption));
+        if (mandateSelected != -1) {
+            mandateSpinner.setSelection(mandateSelected);
+        }
+        mandateMaxAmount.setText(preferences.getString("mandateMaxAmount", Payload.PayloadConstants.mandateMaxAmount));
 
         merchantId.setText(preferences.getString("merchantId", Payload.PayloadConstants.merchantId));
         clientId.setText(preferences.getString("clientId", Payload.PayloadConstants.clientId));
@@ -184,6 +199,14 @@ public class SettingsActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    @OnTextChanged(R.id.mandateMaxAmount)
+    protected void mandateMaxAmountChanged(CharSequence mandateMaxAmount) {
+        hasChanged = true;
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("mandateMaxAmount", mandateMaxAmount.toString());
+        editor.apply();
+    }
+
     @OnItemSelected(R.id.languageSpinner)
     protected void languageChanged(int position) {
         if (position != languageSelected) {
@@ -191,6 +214,17 @@ public class SettingsActivity extends AppCompatActivity {
             String lang = languages.get(position);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString("language", lang);
+            editor.apply();
+        }
+    }
+
+    @OnItemSelected(R.id.mandateSpinner)
+    protected void mandateChanged(int position) {
+        if (position != mandateSelected) {
+            hasChanged = true;
+            String lang = mandateOptions.get(position);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("mandateOption", lang);
             editor.apply();
         }
     }

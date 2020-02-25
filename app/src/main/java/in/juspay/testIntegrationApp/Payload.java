@@ -7,8 +7,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 public class Payload {
@@ -42,7 +46,6 @@ public class Payload {
             initiatePayload.put("signaturePayload", signaturePayload.toString());
             initiatePayload.put("signature", signature);
             initiatePayload.put("environment", preferences.getString("environment", PayloadConstants.environment));
-            initiatePayload.put("betaAssets", preferences.getBoolean("betaAssets", PayloadConstants.betaAssets));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -61,7 +64,23 @@ public class Payload {
             orderDetails.put("timestamp", getTimeStamp());
             orderDetails.put("merchant_id", preferences.getString("merchantId", PayloadConstants.merchantId));
             orderDetails.put("amount", preferences.getString("amount", PayloadConstants.amount));
+            String mandateType = preferences.getString("mandateOption", PayloadConstants.mandateOption);
+            if (!mandateType.equals("None")) {
+                orderDetails.put("options.create_mandate", mandateType);
+                orderDetails.put("mandate_max_amount", preferences.getString("mandateMaxAmount", PayloadConstants.mandateMaxAmount));
+                orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_EXPIRY_DATE", "2020-12-30");
+                orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_FREQUENCY_UNIT", "MONTH");
+                orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_FREQUENCY", "2");
+                orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_GRACE_DAYS", "0");
+
+                Date c = Calendar.getInstance().getTime();
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                String formattedDate = df.format(c);
+                orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_START_DATE", formattedDate);
+            }
             orderDetails.put("return_url", PayloadConstants.returnUrl);
+            String desc =  "Get pro for Rs. 0.33/mo for 3 months";
+            orderDetails.put("description", desc);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -100,6 +119,7 @@ public class Payload {
             paymentsPayload.put("requestId", requestId);
             paymentsPayload.put("service", preferences.getString("service", PayloadConstants.service));
             paymentsPayload.put("payload", payload);
+            paymentsPayload.put("betaAssets", preferences.getBoolean("betaAssets", PayloadConstants.betaAssets));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -152,6 +172,13 @@ public class Payload {
             editor.putString("language", PayloadConstants.language);
         }
 
+        if (!preferences.contains("mandateOption")) {
+            editor.putString("mandateOption", PayloadConstants.mandateOption);
+        }
+        if (!preferences.contains("mandateMaxAmount")) {
+            editor.putString("mandateMaxAmount", PayloadConstants.mandateMaxAmount);
+        }
+
         if (!preferences.contains("merchantId")) {
             editor.putString("merchantId", PayloadConstants.merchantId);
         }
@@ -187,16 +214,19 @@ public class Payload {
         final public static String service = "in.juspay.hyperpay";
 
         final public static String mobileNumber = "9876543210";
-        final public static String clientId = "hyper_beta_android";
+        final public static String clientId = "jiosaavn_android";
         final public static String firstName = "Test";
         final public static String lastName = "User";
         final public static String emailAddress = "test@juspay.in";
         final public static String customerId = "9876543210";
-        final public static String merchantId = "hyper_beta";
+        final public static String merchantId = "jiosaavn";
+
+        final public static String mandateOption = "OPTIONAL";
+        final public static String mandateMaxAmount = "1.0";
 
         final public static String initAction = "initiate";
-        final public static String processAction = "quickPay";
-        final public static String merchantKeyId = "2992";
+        final public static String processAction = "paymentPage";
+        final public static String merchantKeyId = "3164";
         final public static String environment = "sandbox";
 
         final public static String amount = "1.0";

@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.isPrefetchDone = true;
+        this.isPrefetchDone = false;
         preFetchPayload = new JSONObject();
 
         ActionBar actionBar = getSupportActionBar();
@@ -68,12 +69,16 @@ public class MainActivity extends AppCompatActivity {
     private void constructPrefetchPayload() {
         String clientId = preferences.getString("clientIdPrefetch", Payload.PayloadConstants.clientId);
         boolean useBetaAssets = preferences.getBoolean("betaAssetsPrefetch", Payload.PayloadConstants.betaAssets);
-        ArrayList<String> services = new ArrayList<>(Collections.singletonList("in.juspay.hyperpay"));
+        JSONArray services = new JSONArray();
+        services.put("in.juspay.hyperpay");
+
+        JSONObject innerPayload = new JSONObject();
 
         try {
-            preFetchPayload.put("clientId", clientId);
-            preFetchPayload.put("betaAssets", useBetaAssets);
+            innerPayload.put("clientId", clientId);
             preFetchPayload.put("services", services);
+            preFetchPayload.put("betaAssets", useBetaAssets);
+            preFetchPayload.put("payload", innerPayload);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -90,9 +95,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startPrefetch(View view){
-//        HyperServices.preFetch(this, preFetchPayload);
+        HyperServices.preFetch(this, preFetchPayload);
         this.isPrefetchDone = true;
-        Toast.makeText(this, "Prefetch is temporarily disabled for now!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Prefetch started!", Toast.LENGTH_SHORT).show();
     }
 
     public void showPrefetchInput(View view){

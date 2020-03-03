@@ -61,4 +61,11 @@
     <string name="mandate_max_amount">Mandate Max Amount</string>
 
     <bool name="godel_debuggable">true</bool>
+
+    <string-array name="microapps_id">
+        <item>in.juspay.godel</item>
+        <item>in.juspay.hyperpay</item>
+        <item>in.juspay.vies</item>
+        <item>in.juspay.ec</item>
+    </string-array>
 </resources>

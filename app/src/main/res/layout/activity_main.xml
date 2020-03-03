@@ -71,6 +71,12 @@
                         android:layout_height="wrap_content"
                         android:text="@string/prefetch"/>
 
+                    <Spinner
+                        android:id="@+id/microapp_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/microapps_id" />
+
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>

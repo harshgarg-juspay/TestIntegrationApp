@@ -21,10 +21,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 import in.juspay.services.HyperServices;
+import in.juspay.testIntegrationApp.paymentPage.Payload;
+import in.juspay.testIntegrationApp.paymentPage.PaymentsActivity;
+import in.juspay.testIntegrationApp.vies.ViesActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -87,8 +87,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void startInitiateActivity(View view){
         if(isPrefetchDone) {
-            Intent initiateIntent = new Intent(this, PaymentsActivity.class);
+//            Intent initiateIntent = new Intent(this, PaymentsActivity.class);
+//            startActivity(initiateIntent);
+            Intent initiateIntent = new Intent(this, ViesActivity.class);
+            initiateIntent.putExtra("client_id", preferences.getString("clientIdPrefetch", Payload.PayloadConstants.clientId));
             startActivity(initiateIntent);
+
         } else {
             Snackbar.make(view, "Please Complete prefetch", Snackbar.LENGTH_SHORT).show();
         }

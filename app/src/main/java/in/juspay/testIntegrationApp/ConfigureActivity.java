@@ -14,6 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnTextChanged;
+import in.juspay.testIntegrationApp.paymentPage.Payload;
 
 public class ConfigureActivity extends AppCompatActivity {
 

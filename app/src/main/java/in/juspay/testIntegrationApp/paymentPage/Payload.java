@@ -1,4 +1,4 @@
-package in.juspay.testIntegrationApp;
+package in.juspay.testIntegrationApp.paymentPage;
 
 import android.content.SharedPreferences;
 import android.text.TextUtils;
@@ -140,7 +140,7 @@ public class Payload {
         return "R" + (long) (Math.random() * 10000000000L);
     }
 
-    static void setDefaultsIfNotPresent(SharedPreferences preferences) {
+    public static void setDefaultsIfNotPresent(SharedPreferences preferences) {
         SharedPreferences.Editor editor = preferences.edit();
 
         if (!preferences.contains("clientIdPrefetch")) {

@@ -3,6 +3,7 @@ package in.juspay.testIntegrationApp.ec;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
@@ -12,13 +13,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 
@@ -27,7 +29,6 @@ import in.juspay.hypersdk.data.JuspayResponseHandler;
 import in.juspay.hypersdk.ui.HyperPaymentsCallbackAdapter;
 import in.juspay.services.HyperServices;
 import in.juspay.testIntegrationApp.Payload;
-import in.juspay.testIntegrationApp.PaymentsActivity;
 import in.juspay.testIntegrationApp.R;
 import in.juspay.testIntegrationApp.UiUtils;
 
@@ -64,7 +65,10 @@ public class EC extends AppCompatActivity {
     private String requestId;
     private String signURL;
     private boolean isGodel = false;
+    JSONObject merchantConfig;
+    JSONObject customerConfig;
     JSONObject object = new JSONObject();
+    JSONObject processObject = new JSONObject();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,14 +113,20 @@ public class EC extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
     private void prepareInitiatePayload() throws JSONException {
-        JSONObject merchantConfig = new JSONObject();
+        merchantConfig = new JSONObject();
         merchantConfig.put(PaymentConstants.SERVICE,"in.juspay.ec");
         merchantConfig.put(PaymentConstants.MERCHANT_ID,"bb_instant");
         merchantConfig.put(PaymentConstants.CLIENT_ID,"bb_instant");
         merchantConfig.put(PaymentConstants.ENV,"sandbox");
 
-        JSONObject customerConfig = new JSONObject();
+        customerConfig = new JSONObject();
         customerConfig.put(PaymentConstants.CUSTOMER_ID,"123123123");
 
         hyperServices = new HyperServices(this);
@@ -140,7 +150,6 @@ public class EC extends AppCompatActivity {
         hyperServices.initiate(object, new HyperPaymentsCallbackAdapter() {
             @Override
             public void onEvent(JSONObject data, JuspayResponseHandler handler) {
-                Log.d("Inside OnEvent ", "initiate");
                 try {
                     String event = data.getString("event");
                     switch (event) {
@@ -182,17 +191,49 @@ public class EC extends AppCompatActivity {
         }
     }
 
-    public void startProcessActivity(View view) {
+    public void showInitiateOutput(View view) {
+        try {
+            if (isInitiateDone) {
+                UiUtils.showMessageInModal(this, "Signing Output", initiateResult.toString(4));
+            }else{
+                Snackbar.make(view, "Please Complete Initiate", Snackbar.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void startProcessActivity(View view) throws JSONException {
         if (isInitiateDone) {
             Objects.requireNonNull(getSupportActionBar()).setTitle(UiUtils.getWhiteText("Process"));
             initiateLayout.setVisibility(View.GONE);
             processLayout.setVisibility(View.VISIBLE);
+            prepareProcess();
         } else {
             Snackbar.make(view, "Please Complete Initiate", Snackbar.LENGTH_SHORT).show();
         }
 
     }
 
+    public void processJuspaySdk(View view) {
+        hyperServices.process(processObject);
+    }
 
+    public void showProcessInput(View view) throws JSONException {
+        UiUtils.showMessageInModal(this, "Process Input", processObject.toString(4));
+    }
+
+    public void prepareProcess() throws JSONException {
+        ArrayList<String> urls = new ArrayList<String>();
+        urls.add("juspay.n");
+        JSONObject payload = new JSONObject();
+        payload.put("action","startJuspaySafe");
+        payload.put("orderId","123123");
+        payload.put("url","www.google.com");
+        payload.put("endUrls",new JSONArray(urls));
+        processObject.put("payload",payload);
+        processObject.put("requestId", new Random().nextInt(10000) + "");
+        processObject.put("service","in.juspay.ec");
+    }
 
 }

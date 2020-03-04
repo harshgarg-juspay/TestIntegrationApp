@@ -1,4 +1,4 @@
-package in.juspay.testIntegrationApp;
+package in.juspay.testIntegrationApp.paymentPage;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -29,6 +30,9 @@ import java.util.concurrent.ExecutionException;
 import in.juspay.hypersdk.data.JuspayResponseHandler;
 import in.juspay.hypersdk.ui.HyperPaymentsCallbackAdapter;
 import in.juspay.services.HyperServices;
+import in.juspay.testIntegrationApp.R;
+import in.juspay.testIntegrationApp.SignatureAPI;
+import in.juspay.testIntegrationApp.UiUtils;
 
 public class PaymentsActivity extends AppCompatActivity {
 
@@ -46,6 +50,7 @@ public class PaymentsActivity extends AppCompatActivity {
     private JSONObject initiateResult;
 
     private LinearLayout initiateLayout;
+    private Button getSignButton;
 
 
     // Variables for process
@@ -90,6 +95,9 @@ public class PaymentsActivity extends AppCompatActivity {
         initiateLayout.setVisibility(View.VISIBLE);
         processLayout.setVisibility(View.GONE);
 
+        getSignButton = findViewById(R.id.actionButton1);
+        getSignButton.setText("SIGN CUSTOMER DETAILS PAYLOAD");
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
@@ -123,12 +131,16 @@ public class PaymentsActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    // Initiate Functions
-
-    public void generateSignaturePayload() {
-        signaturePayload = Payload.generateSignaturePayload(preferences);
+    //Sign Signature Payload Generation Action Button
+    public void takeActionButton1() {
+        generateSignaturePayload();
     }
 
+    public void generateSignaturePayload() {
+
+        signaturePayload = Payload.generateSignaturePayload(preferences);
+    }
+    // Initiate Functions
     public void generateInitiatePayload() {
         initiatePayload = Payload.generateInitiatePayload(preferences, signaturePayload, initiateSignature);
     }

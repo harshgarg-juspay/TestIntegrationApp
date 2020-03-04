@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".PaymentsActivity">
+    tools:context=".paymentPage.PaymentsActivity">
 
     <LinearLayout
         android:id="@+id/initiateLayout"
@@ -80,9 +80,10 @@
                         </LinearLayout>
 
                         <Button
+                            android:id="@+id/actionButton1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:onClick="signSignaturePayload"
+                            android:onClick="takeActionButton1"
                             android:text="@string/sign_customer_details_payload" />
 
                     </LinearLayout>
@@ -396,9 +397,17 @@
                                 android:padding="16dp"
                                 android:orientation="vertical">
 
+                                <Spinner
+                                    android:id="@+id/serviceType"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:visibility="gone"
+                                    android:entries="@array/vies_service_types"
+                                    android:prompt="@string/vies_service_type_prompt" />
+
                                 <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
+                                    android:layout_height="match_parent">
 
                                     <Button
                                         android:layout_width="wrap_content"

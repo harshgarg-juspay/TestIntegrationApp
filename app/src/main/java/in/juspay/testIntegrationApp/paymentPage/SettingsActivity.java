@@ -1,4 +1,4 @@
-package in.juspay.testIntegrationApp;
+package in.juspay.testIntegrationApp.paymentPage;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +21,9 @@ import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnItemSelected;
 import butterknife.OnTextChanged;
+import in.juspay.testIntegrationApp.R;
+import in.juspay.testIntegrationApp.UiUtils;
+import in.juspay.testIntegrationApp.paymentPage.Payload;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -89,6 +92,7 @@ public class SettingsActivity extends AppCompatActivity {
             actionBar.setDisplayShowHomeEnabled(false);
             actionBar.setTitle(UiUtils.getWhiteText("Configuration"));
         }
+
 
         actions = Arrays.asList("paymentPage", "addCard", "addAndLinkWallet", "nb", "upi", "delinkWallet", "quickPay", "emi");
         languages = Arrays.asList("English", "Hindi", "Tamil", "Malayalam", "Gujarati", "Marathi", "Telugu", "Bengali", "Kannada");

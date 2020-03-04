@@ -23,12 +23,15 @@
         <activity android:name=".WebViewActivity" />
 
         <activity
-            android:name=".SettingsActivity"
+            android:name=".paymentPage.SettingsActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".PaymentsActivity"
+            android:name=".paymentPage.PaymentsActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".vies.ViesActivity"
             android:theme="@style/AppTheme" />
 
         <activity

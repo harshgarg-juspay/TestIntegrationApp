@@ -12,14 +12,14 @@ public class Preferences {
     private static final String PREFS_KEY = "viesDemoPrefs";
 
     public static String merchantId = "flipkart_visa";
-    public static String juspayApiKey = "8BA7D6345A7475C92B1D7194F61F9A";
+    public static String juspayApiKey = "8BA7D6345A7475C92B1D7194F61F";
     public static String environment = "sandbox";
-    public static String test_mode= "false";
+    public static String test_mode= "true";
     public static String gwRefId = "";
     public static String useLocalEligibility = "true";
 
     static String clientId = "";
-    static String safetyNetApiKey = "AIzaSyCdQ4GoFpbcpc4uJy6PfKjtsSRM6yjiKWI";
+    static String safetyNetApiKey = "";
     static String appId = "in.juspay.amazonpay";
 
     @SuppressLint("HardwareIds")

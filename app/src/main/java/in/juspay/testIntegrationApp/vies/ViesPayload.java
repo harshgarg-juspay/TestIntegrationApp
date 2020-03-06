@@ -51,9 +51,9 @@ public class ViesPayload {
             payload.put("action", "VIES_ELIGIBILITY");
             payload.put("amount", "1.00");
 
-            card.setMaskedCard("40012****1212");
+            card.setMaskedCard("4012****1212");
             card.setAlias("abcd");
-            card.setBin("400012");
+            card.setBin("401200");
 
             JSONObject cardObj = card.toJSON();
             cardArray.put(cardObj);
@@ -91,9 +91,9 @@ public class ViesPayload {
             request.put(PaymentConstants.SERVICE, PaymentConstants.VIES_SERVICE);
             request.put("requestId", Payload.generateRequestId());
 
-            card.setMaskedCard("40012****1212");
+            card.setMaskedCard("4012****1212");
             card.setAlias("abcd");
-            card.setBin("400012");
+            card.setBin("401200");
 
             payload.put("action", "VIES_DISENROLL");
             payload.put("card", card.toJSON());
@@ -114,9 +114,9 @@ public class ViesPayload {
             request.put("requestId", Payload.generateRequestId());
 
             payload.put("action", "VIES_DELETE_CARD");
-            card.setMaskedCard("40012****1212");
+            card.setMaskedCard("4012****1212");
             card.setAlias("abcd");
-            card.setBin("400012");
+            card.setBin("401200");
 
             payload.put("card", card.toJSON());
             request.put("payload", payload);
@@ -126,12 +126,50 @@ public class ViesPayload {
         return  request;
     }
 
+    public static JSONObject getPayPayload(SharedPreferences sharedPreferences, String requestId, View view, JSONObject txn) {
+        JSONObject request = new JSONObject();
+        JSONObject payload = new JSONObject();
+        Card card = new Card();
+        try {
+            request.put(PaymentConstants.SERVICE, PaymentConstants.VIES_SERVICE);
+            request.put("requestId", Payload.generateRequestId());
+
+            payload.put("action", "VIES_DELETE_CARD");
+            card.setMaskedCard("4012****1212");
+            card.setAlias("abcd");
+            card.setBin("401200");
+
+            payload.put("card", card.toJSON());
+
+
+            ArrayList<String> urls = new ArrayList<String>();
+            urls.add("juspay.in/end");
+
+            payload.put("action", "VIES_PAY");
+            payload.put("amount", "1.00");
+            payload.put("card", card.toJSON());
+            payload.put("juspay_txn_resp", txn);
+//            request.put("merchant_root_view", String.valueOf(R.id.mainScreenView));
+            payload.put("end_urls_regexes", new JSONArray(urls));
+
+            // TODO : Add this to use safety net.
+            payload.put("safetynet_api_key", PayloadConstants.safetyNetApiKey);
+
+
+            request.put("payload", payload);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return  request;
+    }
+
+
 
 
     public abstract class PayloadConstants {
 
         final public static String service = "in.juspay.vies";
-        final public static String testMode = "false";
+        final public static String testMode = "true";
         final public static String packageName = "in.juspay.amazonpay";
         final public static String safetyNetApiKey = "";
 

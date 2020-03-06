@@ -30,7 +30,7 @@ public final class Utils {
     private Utils() {
     }
 
-    private static String getBaseUrl() {
+    public static String getBaseUrl() {
         switch (Preferences.environment) {
             case PaymentConstants.ENVIRONMENT.SANDBOX:
                 return "https://sandbox.juspay.in";
@@ -57,7 +57,7 @@ public final class Utils {
 
     public static JSONObject createTxnApi(Context context, String orderId, String amount, String cardNumber, String cardExpMonth, String cardExpYear, String cardCvv, String cardAlias) {
         final String url = "/txns";
-        
+
         final Map<String, String> headers = new HashMap<>();
         final Map<String, String> payload = new HashMap<>();
         final Map<String, String> orderCreatePayload = new HashMap<>();
@@ -89,13 +89,15 @@ public final class Utils {
         payload.put("card_alias", cardAlias);
         payload.put("format", "json");
 
+
+        headers.put("x-merchantid", Preferences.merchantId);
         try {
             return fromResponse(createRequest(context, url, "POST", headers, payload));
         } catch (JSONException | IOException e) {
             e.printStackTrace();
+            return null;
         }
 
-        return null;
     }
 
     public static JSONObject getSessionApi(Context context) {

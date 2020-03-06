@@ -23,7 +23,7 @@
         <activity android:name=".WebViewActivity" />
 
         <activity
-            android:name=".paymentPage.SettingsActivity"
+            android:name=".SettingsActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" />
 

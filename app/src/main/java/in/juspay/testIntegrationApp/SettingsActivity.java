@@ -1,4 +1,4 @@
-package in.juspay.testIntegrationApp.paymentPage;
+package in.juspay.testIntegrationApp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;

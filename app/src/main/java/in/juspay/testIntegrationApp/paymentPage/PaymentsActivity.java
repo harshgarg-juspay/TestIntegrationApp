@@ -31,6 +31,7 @@ import in.juspay.hypersdk.data.JuspayResponseHandler;
 import in.juspay.hypersdk.ui.HyperPaymentsCallbackAdapter;
 import in.juspay.services.HyperServices;
 import in.juspay.testIntegrationApp.R;
+import in.juspay.testIntegrationApp.SettingsActivity;
 import in.juspay.testIntegrationApp.SignatureAPI;
 import in.juspay.testIntegrationApp.UiUtils;
 

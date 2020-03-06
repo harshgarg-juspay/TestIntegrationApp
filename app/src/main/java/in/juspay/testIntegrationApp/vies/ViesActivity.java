@@ -28,12 +28,16 @@ import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Logger;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -76,6 +80,7 @@ public class ViesActivity extends AppCompatActivity {
     private boolean isInitiateDone;
     private JSONObject initiateResult;
     private JSONObject initiatePayload;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -276,8 +281,7 @@ public class ViesActivity extends AppCompatActivity {
                     hyperServices.process(ViesPayload.getMaxAmountPayload(sharedPreferences, requestId, view));
                     break;
                 case "PAY":
-//                    createOrder;
-//                    hyperServices.process(ViesPayload.getPayPayload(sharedPreferences, requestId, view));
+                    handleCreateTxnAndProcess(view);
                     break;
                 case "DISENROLL":
                     hyperServices.process(ViesPayload.getDeenrollCardPayload(sharedPreferences, requestId, view, sessionToken));
@@ -292,6 +296,22 @@ public class ViesActivity extends AppCompatActivity {
         } else {
             Snackbar.make(view, "Please generate orderID", Snackbar.LENGTH_SHORT).show();
         }
+    }
+
+    private void handleCreateTxnAndProcess(View view){
+        new Thread() {
+            @Override
+            public void run() {
+                JSONObject txn = new JSONObject();
+                try {
+
+                    txn = Utils.createTxnApi(view.getContext(), orderId, "1.00", "4012009999900045", "12", "2030","123", "abcdefgijk");
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+                hyperServices.process(ViesPayload.getPayPayload(sharedPreferences, requestId, view, txn));
+            }
+        }.start();
     }
 
 }

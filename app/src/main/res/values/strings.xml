@@ -35,6 +35,7 @@
     <string name="prefetch">Prefetch</string>
     <string name="generate_order_id">Generate Order ID</string>
     <string name="sign_order_details_payload">Sign Order Details Payload</string>
+    <string name="create_order">Create Order</string>
     <string name="terminate">Terminate</string>
     <string name="sign_customer_details_payload">Sign Customer Details Payload</string>
     <string name="initiate">Initiate</string>
@@ -59,6 +60,7 @@
     <string name="beta_assets">Beta Assets</string>
     <string name="mandate_options">Mandate Options</string>
     <string name="mandate_max_amount">Mandate Max Amount</string>
+    <string name="end_url">\"sandbox.juspay.in/end\"</string>
 
     <bool name="godel_debuggable">true</bool>
 

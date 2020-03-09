@@ -1,9 +1,11 @@
 package in.juspay.testIntegrationApp.ec;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
@@ -29,10 +31,18 @@ import in.juspay.hypersdk.data.JuspayResponseHandler;
 import in.juspay.hypersdk.ui.HyperPaymentsCallbackAdapter;
 import in.juspay.services.HyperServices;
 import in.juspay.testIntegrationApp.Payload;
+import in.juspay.testIntegrationApp.PaymentsActivity;
 import in.juspay.testIntegrationApp.R;
+import in.juspay.testIntegrationApp.SettingsActivity;
 import in.juspay.testIntegrationApp.UiUtils;
+import in.juspay.testIntegrationApp.serverCalls.JuspayHTTPResponse;
+
+import static in.juspay.testIntegrationApp.serverCalls.Api.generateOrder;
 
 public class EC extends AppCompatActivity {
+    private static final String LOG_TAG = "EC_ACTIVITY";
+
+    private static final int SETTINGS_ACTIVITY_REQ_CODE = 421;
     private LinearLayout initiateLayout;
     private LinearLayout processLayout;
     private SharedPreferences preferences;
@@ -41,7 +51,7 @@ public class EC extends AppCompatActivity {
 
     private String initiateSignature;
 
-    private boolean isSignaturePayloadSigned;
+    private boolean isOrderCreateDone = false;
     private boolean isInitiateDone;
     private JSONObject initiateResult;
 
@@ -54,7 +64,7 @@ public class EC extends AppCompatActivity {
     private String orderId;
     private String processSignature;
 
-    private boolean isOrderIDGenerated;
+    private boolean isOrderIDGenerated = false;
     private boolean isOrderDetailsSigned;
     private boolean isProcessDone;
     private JSONObject processResult;
@@ -69,6 +79,7 @@ public class EC extends AppCompatActivity {
     JSONObject customerConfig;
     JSONObject object = new JSONObject();
     JSONObject processObject = new JSONObject();
+    JSONObject orderResponse = new JSONObject();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,12 +109,13 @@ public class EC extends AppCompatActivity {
 
     private void prepareUI() {
         initiateLayout = findViewById(R.id.initiateLayout);
-        CardView signInitCard = findViewById(R.id.signInitCard);
-        signInitCard.setVisibility(View.GONE);
         processLayout = findViewById(R.id.processLayout);
 
         initiateLayout.setVisibility(View.VISIBLE);
         processLayout.setVisibility(View.GONE);
+
+        CardView signInitCard = findViewById(R.id.signInitCard);
+        signInitCard.setVisibility(View.GONE);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -203,37 +215,154 @@ public class EC extends AppCompatActivity {
         }
     }
 
-    public void startProcessActivity(View view) throws JSONException {
+    public void startProcessActivity(View view) {
         if (isInitiateDone) {
             Objects.requireNonNull(getSupportActionBar()).setTitle(UiUtils.getWhiteText("Process"));
             initiateLayout.setVisibility(View.GONE);
+
+//            CardView signProcessCard = findViewById(R.id.signProcessCard);
+//            signProcessCard.setVisibility(View.GONE);
+            CardView createOrderCard = findViewById(R.id.createOrderCard);
+            createOrderCard.setVisibility(View.VISIBLE);
+
             processLayout.setVisibility(View.VISIBLE);
-            prepareProcess();
+
         } else {
             Snackbar.make(view, "Please Complete Initiate", Snackbar.LENGTH_SHORT).show();
         }
 
     }
 
+    public void showCreateOrderFAQ(View view){
+
+    }
+
+    public void generateOrderID(View view) {
+        orderId = Payload.generateOrderId();
+        isOrderIDGenerated = true;
+        Toast.makeText(this, "Order ID Generated: " + orderId, Toast.LENGTH_LONG).show();
+        generateOrderDetails();
+    }
+
+    public void generateOrderDetails() {
+        orderDetails = Payload.generateOrderDetails(preferences, orderId);
+        isOrderIDGenerated = true;
+    }
+
+    public void copyOrderID(View view) {
+        if (isOrderIDGenerated) {
+            UiUtils.copyToClipBoard(this, "OrderID", orderId);
+            Toast.makeText(this, "OrderID copied to clipboard: " + orderId, Toast.LENGTH_SHORT).show();
+        } else {
+            Snackbar.make(view, "Generate an order id", Snackbar.LENGTH_SHORT).show();
+        }
+    }
+    public void createOrder(View view) {
+        if (isOrderIDGenerated) {
+            prepareProcess(view);
+        } else {
+            Snackbar.make(view, "Generate an order id", Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    public void showOrderCreateInput(View view){
+        if (isOrderIDGenerated) {
+            UiUtils.showMessageInModal(this, "orderCreate output", orderDetails.toString());
+        } else {
+            Snackbar.make(view, "Generate an order id", Snackbar.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public void showOrderCreateOutput(View view){
+        if (isOrderCreateDone) {
+            UiUtils.showMessageInModal(this, "orderCreate output", orderResponse.toString());
+        } else {
+            Snackbar.make(view, "Please create order to see the output", Snackbar.LENGTH_SHORT).show();
+        }
+
+    }
+
     public void processJuspaySdk(View view) {
-        hyperServices.process(processObject);
+        if(isOrderCreateDone) {
+            hyperServices.process(processObject);
+        }else {
+            Snackbar.make(view, "Please create order to process", Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     public void showProcessInput(View view) throws JSONException {
-        UiUtils.showMessageInModal(this, "Process Input", processObject.toString(4));
+        if(isOrderCreateDone) {
+            UiUtils.showMessageInModal(this, "Process Input", processObject.toString(4));
+        }else{
+            Snackbar.make(view, "Please create order to get process input", Snackbar.LENGTH_SHORT).show();
+        }
     }
 
-    public void prepareProcess() throws JSONException {
-        ArrayList<String> urls = new ArrayList<String>();
-        urls.add("juspay.n");
-        JSONObject payload = new JSONObject();
-        payload.put("action","startJuspaySafe");
-        payload.put("orderId","123123");
-        payload.put("url","www.google.com");
-        payload.put("endUrls",new JSONArray(urls));
-        processObject.put("payload",payload);
-        processObject.put("requestId", new Random().nextInt(10000) + "");
-        processObject.put("service","in.juspay.ec");
+    public void showProcessOutput(View view) {
+        try {
+            if (isProcessDone) {
+                UiUtils.showMessageInModal(this, "Process Result", processResult.toString(4));
+            } else {
+                Snackbar.make(view, "Process not completed yet!", Snackbar.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
+    public void prepareProcess(View view) {
+        new Thread() {
+
+            @Override
+            public void run() {
+                JuspayHTTPResponse response = generateOrder(orderDetails, "8BA7D6345A7475C92B1D7194F61F9A", "sandbox");
+                ArrayList<String> urls = new ArrayList<>();
+                urls.add("sandbox.juspay.in/end");
+                JSONObject payload = new JSONObject();
+                try {
+                    orderResponse = new JSONObject(response.responsePayload);
+                    payload.put("action", "startJuspaySafe");
+                    payload.put("orderId", "123123");
+                    payload.put("url", orderResponse.getJSONObject("payment_links").getString("iframe" ));
+                    payload.put("endUrls", new JSONArray(urls));
+                    processObject.put("payload", payload);
+                    processObject.put("requestId", new Random().nextInt(10000) + "");
+                    processObject.put("service", "in.juspay.ec");
+                    isOrderCreateDone = true;
+                    Snackbar.make(view,"order created",Snackbar.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+    }
+
+    @Override
+    public void onBackPressed() {
+        boolean backPressHandled = hyperServices.onBackPressed();
+        if (!backPressHandled) {
+            if (processLayout.getVisibility() == View.VISIBLE) {
+                processLayout.setVisibility(View.GONE);
+                initiateLayout.setVisibility(View.VISIBLE);
+                Objects.requireNonNull(getSupportActionBar()).setTitle(UiUtils.getWhiteText("Initiate"));
+            } else {
+                super.onBackPressed();
+            }
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.configure:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivityForResult(intent, SETTINGS_ACTIVITY_REQ_CODE, new Bundle());
+                return true;
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

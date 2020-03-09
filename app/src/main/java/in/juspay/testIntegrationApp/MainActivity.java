@@ -4,10 +4,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -25,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import in.juspay.services.HyperServices;
+import in.juspay.testIntegrationApp.ec.EC;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,7 +36,10 @@ public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences preferences;
     private boolean isPrefetchDone;
+    private String microappId;
     private JSONObject preFetchPayload;
+    private Spinner spinner;
+    String TAG = "VENKAT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
 
         this.isPrefetchDone = false;
         preFetchPayload = new JSONObject();
+
+        Spinner spinner = findViewById(R.id.microapp_spinner);
+        spinner.setOnItemSelectedListener(new CustomOnItemSelectedListener());
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -70,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         String clientId = preferences.getString("clientIdPrefetch", Payload.PayloadConstants.clientId);
         boolean useBetaAssets = preferences.getBoolean("betaAssetsPrefetch", Payload.PayloadConstants.betaAssets);
         JSONArray services = new JSONArray();
-        services.put("in.juspay.hyperpay");
+        services.put(microappId);
 
         JSONObject innerPayload = new JSONObject();
 
@@ -86,8 +96,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void startInitiateActivity(View view){
-        if(isPrefetchDone) {
-            Intent initiateIntent = new Intent(this, PaymentsActivity.class);
+        if(true) {
+            Intent initiateIntent;
+            switch (microappId){
+                case "in.juspay.godel" :
+                            initiateIntent = new Intent(this, EC.class);
+                            initiateIntent.putExtra("isGodel",true);
+                            break;
+                default: initiateIntent = new Intent(this, PaymentsActivity.class);
+            }
+
             startActivity(initiateIntent);
         } else {
             Snackbar.make(view, "Please Complete prefetch", Snackbar.LENGTH_SHORT).show();
@@ -149,5 +167,22 @@ public class MainActivity extends AppCompatActivity {
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    public class CustomOnItemSelectedListener implements AdapterView.OnItemSelectedListener {
+
+        public void onItemSelected(AdapterView<?> parent, View view, int pos,long id) {
+            Toast.makeText(parent.getContext(),
+                    "microapp selected : " + parent.getItemAtPosition(pos).toString(),
+                    Toast.LENGTH_SHORT).show();
+            microappId = parent.getItemAtPosition(pos).toString();
+            constructPrefetchPayload();
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> arg0) {
+            // TODO Auto-generated method stub
+        }
+
     }
 }

@@ -444,4 +444,16 @@ public class PaymentsActivity extends AppCompatActivity {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+    public void showOrderCreateInput(View view) {
+    }
+
+    public void showOrderCreateOutput(View view) {
+    }
+
+    public void showCreateOrderFAQ(View view) {
+    }
+
+    public void createOrder(View view) {
+    }
 }

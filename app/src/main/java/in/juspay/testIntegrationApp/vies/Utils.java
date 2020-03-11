@@ -24,6 +24,7 @@ import javax.net.ssl.SSLContext;
 
 import in.juspay.hypersdk.core.PaymentConstants;
 import in.juspay.hypersdk.utils.network.JuspayHttpResponse;
+import in.juspay.testIntegrationApp.Preferences;
 import in.juspay.vies.Card;
 
 public final class Utils {
@@ -35,7 +36,7 @@ public final class Utils {
             case PaymentConstants.ENVIRONMENT.SANDBOX:
                 return "https://sandbox.juspay.in";
             case PaymentConstants.ENVIRONMENT.PRODUCTION:
-                if(Preferences.test_mode.equals("true")){
+                if(Preferences.testMode.equals("true")){
                     return "https://sandbox.juspay.in";
                 }else{
                     return "https://api.juspay.in";
@@ -67,7 +68,7 @@ public final class Utils {
 
         orderCreatePayload.put(PaymentConstants.ORDER_ID, orderId);
         orderCreatePayload.put(PaymentConstants.AMOUNT, amount);
-        orderCreatePayload.put(PaymentConstants.CUSTOMER_ID, Preferences.getCustomerId(context));
+        orderCreatePayload.put(PaymentConstants.CUSTOMER_ID, Preferences.customerId);
         orderCreatePayload.put("return_url", getBaseUrl() + "/end");
         orderCreatePayload.put("options.get_client_auth_token", "true");
         if(!Preferences.gwRefId.isEmpty()) {
@@ -101,7 +102,7 @@ public final class Utils {
     }
 
     public static JSONObject getSessionApi(Context context) {
-        final String url = "/customers/" + Preferences.getCustomerId(context) + "?options.get_client_auth_token=true";
+        final String url = "/customers/" + Preferences.customerId + "?options.get_client_auth_token=true";
 
         final Map<String, String> headers = new HashMap<>();
 

@@ -21,9 +21,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import in.juspay.services.HyperServices;
 import in.juspay.testIntegrationApp.paymentPage.Payload;
-import in.juspay.testIntegrationApp.paymentPage.PaymentsActivity;
 import in.juspay.testIntegrationApp.vies.ViesActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences preferences;
     private boolean isPrefetchDone;
     private JSONObject preFetchPayload;
+    private JSONObject merchantConfig;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +56,40 @@ public class MainActivity extends AppCompatActivity {
 
         WebView.setWebContentsDebuggingEnabled(true);
 
-        preferences = getSharedPreferences(Payload.PayloadConstants.SHARED_PREF_KEY, MODE_PRIVATE);
-        Payload.setDefaultsIfNotPresent(preferences);
+        preferences = getSharedPreferences(Preferences.SHARED_PREF_KEY, MODE_PRIVATE);
+        Preferences.setDefaultsIfNotPresent(preferences);
+
         constructPrefetchPayload();
+        try {
+            merchantConfig = new JSONObject(loadJSONFromAsset());
+            Iterator <String> keys = merchantConfig.keys();
+            Preferences.merchantIdList = new ArrayList<String>();
+            while (keys.hasNext()) {
+                Preferences.merchantIdList.add(keys.next());
+            }
+            //Fetch 1st object and update preferences. Whenever it is updated in UI, update the preferences.
+            Preferences.updatePreferences(merchantConfig.getJSONObject("flipkart_visa"));
+
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public String loadJSONFromAsset() {
+        String json = null;
+        try {
+            InputStream is = this.getAssets().open("config/merchant/config.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
     }
 
     @Override
@@ -67,8 +103,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void constructPrefetchPayload() {
-        String clientId = preferences.getString("clientIdPrefetch", Payload.PayloadConstants.clientId);
-        boolean useBetaAssets = preferences.getBoolean("betaAssetsPrefetch", Payload.PayloadConstants.betaAssets);
+        String clientId = preferences.getString("clientIdPrefetch", Preferences.clientId);
+        boolean useBetaAssets = preferences.getBoolean("betaAssetsPrefetch", Preferences.betaAssets);
         JSONArray services = new JSONArray();
         services.put("in.juspay.hyperpay");
 
@@ -90,7 +126,11 @@ public class MainActivity extends AppCompatActivity {
 //            Intent initiateIntent = new Intent(this, PaymentsActivity.class);
 //            startActivity(initiateIntent);
             Intent initiateIntent = new Intent(this, ViesActivity.class);
-            initiateIntent.putExtra("client_id", preferences.getString("clientIdPrefetch", Payload.PayloadConstants.clientId));
+//            try {
+//                initiateIntent.putExtra("merchantConfig", merchantConfig.get("flipkart_visa").toString());
+//            }catch (JSONException e){
+//                e.printStackTrace();
+//            }
             startActivity(initiateIntent);
 
         } else {

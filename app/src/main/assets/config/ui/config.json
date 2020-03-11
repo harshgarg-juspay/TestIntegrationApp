@@ -1,0 +1,298 @@
+
+{
+    "in.juspay.ec": {
+        "initiate": {
+            "merchantId": {
+                "dataType" : "String",
+                "editable" : false
+            },
+            "customerId": {
+                "dataType" : "String",
+                "editable" : false
+            },
+            "clientId": {
+                "dataType" : "String",
+                "editable" : false
+            },
+            "environment": {
+                "dataType" : "String",
+                "editable" : false
+            },
+            "betaAssets": {
+                "dataType" : "Boolean",
+                "editable" : false
+            }
+        },
+        "getPaymentMethods": {},
+        "nbTxn": {
+            "orderId": {
+                "dataType" : "String",
+                "editable" : false
+            },
+            "clientAuthToken": {
+                "dataType" : "String",
+                "editable" : false
+            },
+            "paymentMethod": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Bank code"
+            }
+            "endUrls": {
+                "dataType" : "ArrayString",
+                "editable" : false
+            }
+        },
+        "cardTxn": {
+            "orderId": {
+                "dataType" : "String",
+                "editable" : false
+            },
+            "clientAuthToken": {
+                "dataType" : "String",
+                "editable" : false
+            },
+            "cardNumber": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Card number"
+            },
+            "expiryMonth": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Expiry month"
+            },
+            "expiryYear": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Expiry year"
+            },
+            "cardSecurityCode": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "CVV"
+            },
+            "nameOnCard": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Name on card"
+            },
+            "cardToken": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Card token"
+            }
+            "endUrls": {
+                "dataType" : "ArrayString",
+                "editable" : false
+            }
+        },
+        "walletTxn": {
+            "orderId": {
+                "dataType" : "String",
+                "editable" : false
+            },
+            "clientAuthToken": {
+                "dataType" : "String",
+                "editable" : false
+            },
+            "paymentMethod": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Wallet name"
+            },
+            "directWalletToken": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Wallet token"
+            },
+            "sdkPresent" : {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "SDK present"
+            },
+            "walletMobileNumber": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Mobile number"
+            },
+            "walletEmailAddress": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Email address"
+            }
+            "endUrls": {
+                "dataType" : "ArrayString",
+                "editable" : false
+            }
+        },
+        "upiTxn": {
+            "orderId": {
+                "dataType" : "String",
+                "editable" : false
+            },
+            "clientAuthToken": {
+                "dataType" : "String",
+                "editable" : false
+            },
+            "custVpa": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Customer VPA"
+            }
+            "endUrls": {
+                "dataType" : "ArrayString",
+                "editable" : false
+            }
+        },
+        "cardList": {
+            "clientAuthToken": {
+                "dataType" : "String",
+                "editable" : false
+            }
+        },
+        "deleteCard": {
+            "clientAuthToken": {
+                "dataType" : "String",
+                "editable" : false
+            },
+            "cardToken": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Card token"
+            }
+        },
+        "refreshWalletBalances": {
+            "clientAuthToken": {
+                "dataType" : "String",
+                "editable" : false
+            },
+            "sdkWalletIdentifier": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Only for AmazonPay"
+            }
+        },
+        "createWallet": {
+            "clientAuthToken": {
+                "dataType" : "String",
+                "editable" : false
+            },
+            "walletName": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Wallet name"
+            }
+        },
+        "linkWallet": {
+            "clientAuthToken": {
+                "dataType" : "String",
+                "editable" : false
+            },
+            "walletId": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Wallet ID"
+            },
+            "otp": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "OTP"
+            },
+            "walletName": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Wallet name"
+            },
+            "sdkWalletIdentifier": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Only for AmazonPay"
+            }
+        },
+        "refreshWallet": {
+            "clientAuthToken": {
+                "dataType" : "String",
+                "editable" : false
+            },
+            "walletId": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Wallet ID"
+            },
+            "sdkWalletIdentifier": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Only for AmazonPay"
+            }
+        },
+        "delinkWallet": {
+            "clientAuthToken": {
+                "dataType" : "String",
+                "editable" : false
+            },
+            "walletId": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Wallet ID"
+            }
+        },
+        "eligibility": {
+            "clientAuthToken": {
+                "dataType" : "String",
+                "editable" : false
+            },
+            "orderId": {
+                "dataType" : "String",
+                "editable" : false
+            },
+        },
+        "tokenizeCard": {
+            "clientAuthToken": {
+                "dataType" : "String",
+                "editable" : false
+            },
+            "cardNumber": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Card number"
+            },
+            "expiryMonth": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Expiry month"
+            },
+            "expiryYear": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Expiry year"
+            },
+            "cardSecurityCode": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "CVV"
+            },
+            "nameOnCard": {
+                "dataType" : "String",
+                "editable" : true,
+                "placeholder" : "Name on card"
+            }
+        },
+        "cardInfo": {
+            "cardBin": {
+                "dataType" : "String",
+                "editable" : true
+            }
+        }
+    },
+    "in.juspay.hyperpay": {
+        "paymentPage": {
+            "v1": {
+            
+            },
+            "v2": {
+
+            }
+        }
+    }
+}

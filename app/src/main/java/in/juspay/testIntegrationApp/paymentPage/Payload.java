@@ -15,6 +15,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
+
+import in.juspay.testIntegrationApp.Preferences;
+
 public class Payload {
 
     public static String getTimeStamp() {
@@ -24,13 +27,13 @@ public class Payload {
     public static JSONObject generateSignaturePayload(SharedPreferences preferences) {
         JSONObject signaturePayload = new JSONObject();
         try {
-            signaturePayload.put("first_name", preferences.getString("firstName", PayloadConstants.firstName));
-            signaturePayload.put("last_name", preferences.getString("lastName", PayloadConstants.lastName));
-            signaturePayload.put("mobile_number", preferences.getString("mobileNumber", PayloadConstants.mobileNumber));
-            signaturePayload.put("email_address", preferences.getString("emailAddress", PayloadConstants.emailAddress));
-            signaturePayload.put("customer_id", preferences.getString("customerId", PayloadConstants.customerId));
+            signaturePayload.put("first_name", preferences.getString("firstName", Preferences.firstName));
+            signaturePayload.put("last_name", preferences.getString("lastName", Preferences.lastName));
+            signaturePayload.put("mobile_number", preferences.getString("mobileNumber", Preferences.mobileNumber));
+            signaturePayload.put("email_address", preferences.getString("emailAddress", Preferences.emailAddress));
+            signaturePayload.put("customer_id", preferences.getString("customerId", Preferences.customerId));
             signaturePayload.put("timestamp", getTimeStamp());
-            signaturePayload.put("merchant_id", preferences.getString("merchantId", PayloadConstants.merchantId));
+            signaturePayload.put("merchant_id", preferences.getString("merchantId", Preferences.merchantId));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -40,12 +43,12 @@ public class Payload {
     public static JSONObject generateInitiatePayload(SharedPreferences preferences, JSONObject signaturePayload, String signature) {
         JSONObject initiatePayload = new JSONObject();
         try {
-            initiatePayload.put("action", PayloadConstants.initAction);
-            initiatePayload.put("clientId", preferences.getString("clientId", PayloadConstants.clientId));
-            initiatePayload.put("merchantKeyId", preferences.getString("merchantKeyId", PayloadConstants.merchantKeyId));
+            initiatePayload.put("action", Preferences.initAction);
+            initiatePayload.put("clientId", preferences.getString("clientId", Preferences.clientId));
+            initiatePayload.put("merchantKeyId", preferences.getString("merchantKeyId", Preferences.merchantKeyId));
             initiatePayload.put("signaturePayload", signaturePayload.toString());
             initiatePayload.put("signature", signature);
-            initiatePayload.put("environment", preferences.getString("environment", PayloadConstants.environment));
+            initiatePayload.put("environment", preferences.getString("environment", Preferences.environment));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -56,18 +59,18 @@ public class Payload {
         JSONObject orderDetails = new JSONObject();
         try {
             orderDetails.put("order_id", orderId);
-            orderDetails.put("first_name", preferences.getString("firstName", PayloadConstants.firstName));
-            orderDetails.put("last_name", preferences.getString("lastName", PayloadConstants.lastName));
-            orderDetails.put("mobile_number", preferences.getString("mobileNumber", PayloadConstants.mobileNumber));
-            orderDetails.put("email_address", preferences.getString("emailAddress", PayloadConstants.emailAddress));
-            orderDetails.put("customer_id", preferences.getString("customerId", PayloadConstants.customerId));
+            orderDetails.put("first_name", preferences.getString("firstName", Preferences.firstName));
+            orderDetails.put("last_name", preferences.getString("lastName", Preferences.lastName));
+            orderDetails.put("mobile_number", preferences.getString("mobileNumber", Preferences.mobileNumber));
+            orderDetails.put("email_address", preferences.getString("emailAddress", Preferences.emailAddress));
+            orderDetails.put("customer_id", preferences.getString("customerId", Preferences.customerId));
             orderDetails.put("timestamp", getTimeStamp());
-            orderDetails.put("merchant_id", preferences.getString("merchantId", PayloadConstants.merchantId));
-            orderDetails.put("amount", preferences.getString("amount", PayloadConstants.amount));
-            String mandateType = preferences.getString("mandateOption", PayloadConstants.mandateOption);
+            orderDetails.put("merchant_id", preferences.getString("merchantId", Preferences.merchantId));
+            orderDetails.put("amount", preferences.getString("amount", Preferences.amount));
+            String mandateType = preferences.getString("mandateOption", Preferences.mandateOption);
             if (!mandateType.equals("None")) {
                 orderDetails.put("options.create_mandate", mandateType);
-                orderDetails.put("mandate_max_amount", preferences.getString("mandateMaxAmount", PayloadConstants.mandateMaxAmount));
+                orderDetails.put("mandate_max_amount", preferences.getString("mandateMaxAmount", Preferences.mandateMaxAmount));
                 orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_EXPIRY_DATE", "2020-12-30");
                 orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_FREQUENCY_UNIT", "MONTH");
                 orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_FREQUENCY", "2");
@@ -78,7 +81,7 @@ public class Payload {
                 String formattedDate = df.format(c);
                 orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_START_DATE", formattedDate);
             }
-            orderDetails.put("return_url", PayloadConstants.returnUrl);
+            orderDetails.put("return_url", Preferences.returnUrl);
             String desc =  "Get pro for Rs. 0.33/mo for 3 months";
             orderDetails.put("description", desc);
         } catch (JSONException e) {
@@ -90,23 +93,23 @@ public class Payload {
     public static JSONObject generateProcessPayload(SharedPreferences preferences, String orderId, JSONObject orderDetails, String signature) {
         JSONObject processPayload = new JSONObject();
         try {
-            processPayload.put("action", preferences.getString("action", PayloadConstants.processAction));
-            processPayload.put("merchantId", preferences.getString("merchantId", PayloadConstants.merchantId));
-            processPayload.put("clientId", preferences.getString("clientId", PayloadConstants.clientId));
+            processPayload.put("action", preferences.getString("action", Preferences.processAction));
+            processPayload.put("merchantId", preferences.getString("merchantId", Preferences.merchantId));
+            processPayload.put("clientId", preferences.getString("clientId", Preferences.clientId));
             processPayload.put("orderId", orderId);
-            processPayload.put("amount", preferences.getString("amount", PayloadConstants.amount));
-            processPayload.put("customerId", preferences.getString("customerId", PayloadConstants.customerId));
-            processPayload.put("customerMobile", preferences.getString("mobileNumber", PayloadConstants.mobileNumber));
+            processPayload.put("amount", preferences.getString("amount", Preferences.amount));
+            processPayload.put("customerId", preferences.getString("customerId", Preferences.customerId));
+            processPayload.put("customerMobile", preferences.getString("mobileNumber", Preferences.mobileNumber));
 
             ArrayList<String> endUrlArr = new ArrayList<>(Arrays.asList(".*sandbox.juspay.in\\/thankyou.*", ".*sandbox.juspay.in\\/end.*", ".*localhost.*", ".*api.juspay.in\\/end.*"));
             JSONArray endUrls = new JSONArray(endUrlArr);
 
             processPayload.put("endUrls", endUrls);
 
-            processPayload.put("merchantKeyId",preferences.getString("merchantKeyId", PayloadConstants.merchantKeyId));
+            processPayload.put("merchantKeyId",preferences.getString("merchantKeyId", Preferences.merchantKeyId));
             processPayload.put("orderDetails", orderDetails.toString());
             processPayload.put("signature", signature);
-            processPayload.put("language", preferences.getString("language", PayloadConstants.language));
+            processPayload.put("language", preferences.getString("language", Preferences.language));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -117,9 +120,9 @@ public class Payload {
         JSONObject paymentsPayload = new JSONObject();
         try {
             paymentsPayload.put("requestId", requestId);
-            paymentsPayload.put("service", preferences.getString("service", PayloadConstants.service));
+            paymentsPayload.put("service", preferences.getString("service", Preferences.service));
             paymentsPayload.put("payload", payload);
-            paymentsPayload.put("betaAssets", preferences.getBoolean("betaAssets", PayloadConstants.betaAssets));
+            paymentsPayload.put("betaAssets", preferences.getBoolean("betaAssets", Preferences.betaAssets));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -140,102 +143,5 @@ public class Payload {
         return "R" + (long) (Math.random() * 10000000000L);
     }
 
-    public static void setDefaultsIfNotPresent(SharedPreferences preferences) {
-        SharedPreferences.Editor editor = preferences.edit();
-
-        if (!preferences.contains("clientIdPrefetch")) {
-            editor.putString("clientIdPrefetch", PayloadConstants.clientId);
-        }
-        if (!preferences.contains("betaAssetsPrefetch")) {
-            editor.putBoolean("betaAssetsPrefetch", PayloadConstants.betaAssets);
-        }
-
-        if (!preferences.contains("firstName")) {
-            editor.putString("firstName", PayloadConstants.firstName);
-        }
-        if (!preferences.contains("lastName")) {
-            editor.putString("lastName", PayloadConstants.lastName);
-        }
-        if (!preferences.contains("mobileNumber")) {
-            editor.putString("mobileNumber", PayloadConstants.mobileNumber);
-        }
-        if (!preferences.contains("emailAddress")) {
-            editor.putString("emailAddress", PayloadConstants.emailAddress);
-        }
-        if (!preferences.contains("customerId")) {
-            editor.putString("customerId", PayloadConstants.customerId);
-        }
-        if (!preferences.contains("amount")) {
-            editor.putString("amount", PayloadConstants.amount);
-        }
-        if (!preferences.contains("language")) {
-            editor.putString("language", PayloadConstants.language);
-        }
-
-        if (!preferences.contains("mandateOption")) {
-            editor.putString("mandateOption", PayloadConstants.mandateOption);
-        }
-        if (!preferences.contains("mandateMaxAmount")) {
-            editor.putString("mandateMaxAmount", PayloadConstants.mandateMaxAmount);
-        }
-
-        if (!preferences.contains("merchantId")) {
-            editor.putString("merchantId", PayloadConstants.merchantId);
-        }
-        if (!preferences.contains("clientId")) {
-            editor.putString("clientId", PayloadConstants.clientId);
-        }
-        if (!preferences.contains("service")) {
-            editor.putString("service", PayloadConstants.service);
-        }
-        if (!preferences.contains("merchantKeyId")) {
-            editor.putString("merchantKeyId", PayloadConstants.merchantKeyId);
-        }
-        if (!preferences.contains("signatureURL")) {
-            editor.putString("signatureURL", PayloadConstants.signatureURL);
-        }
-        if (!preferences.contains("environment")) {
-            editor.putString("environment", PayloadConstants.environment);
-        }
-        if (!preferences.contains("action")) {
-            editor.putString("action", PayloadConstants.processAction);
-        }
-        if (!preferences.contains("betaAssets")) {
-            editor.putBoolean("betaAssets", PayloadConstants.betaAssets);
-        }
-
-        editor.apply();
-    }
-
-    public abstract class PayloadConstants {
-
-        public static final String SHARED_PREF_KEY = "Configurations";
-
-        final public static String service = "in.juspay.hyperpay";
-
-        final public static String mobileNumber = "9876543210";
-        final public static String clientId = "jiosaavn_android";
-        final public static String firstName = "Test";
-        final public static String lastName = "User";
-        final public static String emailAddress = "test@juspay.in";
-        final public static String customerId = "9876543210";
-        final public static String merchantId = "jiosaavn";
-
-        final public static String mandateOption = "OPTIONAL";
-        final public static String mandateMaxAmount = "1.0";
-
-        final public static String initAction = "initiate";
-        final public static String processAction = "paymentPage";
-        final public static String merchantKeyId = "3164";
-        final public static String environment = "sandbox";
-
-        final public static String amount = "1.0";
-        final public static String returnUrl = "https://sandbox.juspay.in/end"; //-
-        final public static String language = "english";
-
-        final public static String signatureURL = "https://dry-cliffs-89916.herokuapp.com/sign-hyper-beta";
-
-        final public static boolean betaAssets = true;
-
-    }
 }
+

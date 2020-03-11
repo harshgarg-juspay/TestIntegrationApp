@@ -80,7 +80,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        preferences = getSharedPreferences(Payload.PayloadConstants.SHARED_PREF_KEY, MODE_PRIVATE);
+        preferences = getSharedPreferences(Preferences.SHARED_PREF_KEY, MODE_PRIVATE);
         prepareUI();
     }
 
@@ -110,39 +110,39 @@ public class SettingsActivity extends AppCompatActivity {
         mandateAdaptor.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mandateSpinner.setAdapter(mandateAdaptor);
 
-        firstName.setText(preferences.getString("firstName", Payload.PayloadConstants.firstName));
-        lastName.setText(preferences.getString("lastName", Payload.PayloadConstants.lastName));
-        mobileNumber.setText(preferences.getString("mobileNumber", Payload.PayloadConstants.mobileNumber));
-        emailAddress.setText(preferences.getString("emailAddress", Payload.PayloadConstants.emailAddress));
-        customerId.setText(preferences.getString("customerId", Payload.PayloadConstants.customerId));
-        amount.setText(preferences.getString("amount", Payload.PayloadConstants.amount));
-        languageSelected = languages.indexOf(preferences.getString("language", Payload.PayloadConstants.language));
+        firstName.setText(preferences.getString("firstName", Preferences.firstName));
+        lastName.setText(preferences.getString("lastName", Preferences.lastName));
+        mobileNumber.setText(preferences.getString("mobileNumber", Preferences.mobileNumber));
+        emailAddress.setText(preferences.getString("emailAddress", Preferences.emailAddress));
+        customerId.setText(preferences.getString("customerId", Preferences.customerId));
+        amount.setText(preferences.getString("amount", Preferences.amount));
+        languageSelected = languages.indexOf(preferences.getString("language", Preferences.language));
         if (languageSelected != -1) {
             languageSpinner.setSelection(languageSelected);
         }
 
-        mandateSelected = mandateOptions.indexOf(preferences.getString("mandateOption", Payload.PayloadConstants.mandateOption));
+        mandateSelected = mandateOptions.indexOf(preferences.getString("mandateOption", Preferences.mandateOption));
         if (mandateSelected != -1) {
             mandateSpinner.setSelection(mandateSelected);
         }
-        mandateMaxAmount.setText(preferences.getString("mandateMaxAmount", Payload.PayloadConstants.mandateMaxAmount));
+        mandateMaxAmount.setText(preferences.getString("mandateMaxAmount", Preferences.mandateMaxAmount));
 
-        merchantId.setText(preferences.getString("merchantId", Payload.PayloadConstants.merchantId));
-        clientId.setText(preferences.getString("clientId", Payload.PayloadConstants.clientId));
-        service.setText(preferences.getString("service", Payload.PayloadConstants.service));
-        merchantKeyId.setText(preferences.getString("merchantKeyId", Payload.PayloadConstants.merchantKeyId));
-        signatureURL.setText(preferences.getString("signatureURL", Payload.PayloadConstants.signatureURL));
-        actionSelected = actions.indexOf(preferences.getString("action", Payload.PayloadConstants.processAction));
+        merchantId.setText(preferences.getString("merchantId", Preferences.merchantId));
+        clientId.setText(preferences.getString("clientId", Preferences.clientId));
+        service.setText(preferences.getString("service", Preferences.service));
+        merchantKeyId.setText(preferences.getString("merchantKeyId", Preferences.merchantKeyId));
+        signatureURL.setText(preferences.getString("signatureURL", Preferences.signatureURL));
+        actionSelected = actions.indexOf(preferences.getString("action", Preferences.processAction));
         if (actionSelected != -1) {
             actionSpinner.setSelection(actionSelected);
         }
-        env = preferences.getString("environment", Payload.PayloadConstants.environment);
+        env = preferences.getString("environment", Preferences.environment);
         if (env.equals("sandbox")) {
             sandbox.setChecked(true);
         } else {
             prod.setChecked(true);
         }
-        betaAssets.setChecked(preferences.getBoolean("betaAssets", Payload.PayloadConstants.betaAssets));
+        betaAssets.setChecked(preferences.getBoolean("betaAssets", Preferences.betaAssets));
 
         hasChanged = false;
     }

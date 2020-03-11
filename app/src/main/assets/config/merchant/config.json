@@ -1,0 +1,49 @@
+{
+    "picasso": {
+        "clientId": "picasso",
+        "apiVersion": "v1",
+        "sandbox": {
+            "apiKey": "9E8BE20E630C6FAC272B39"
+        },
+        "production": {
+            "apiKey": ""
+        },
+        "betaAssets": true,
+        "services": ["in.juspay.ec", "in.juspay.godel"]
+    },
+    "idea_preprod": {
+        "clientId": "idea",
+        "apiVersion": "v2",
+        "sandbox": {
+            "apiKey": "497B1876B5243814A3",
+            "merchantKeyId": "2980",
+            "privateKey": "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAyaHH6HkD089rTPawPPlr245mIUVt6q9ViacRihDk2eo0WULh\nOeJ1sgDHPepmoslSa1M/XIyIkk84ltUmtWGy5O\nNEXzw7b6Pc1rxjveh3+sx+AGo2ofgZYjQ4j7JOF0Hrja3sO83VzUYMeEdWkmet8d\ng9RdOa8CK+uar6hq9dxW6yd8VKIi0Ogl5hpXywIDAQABAoIBAFphs5uIi2eppX6F\nYfCjGW78gNlPJvs5Bw3CHwGVmw/3hOmyKjRV7BjpqzjS7heHjgJHT6pUFWgx+E5H\naklRMsFzFMk2diVODZ/qxuD+ywN6szLDbvLeu4IgBBOOyDwyJbtlcBqK678cCWng\nlxZhzmnPgxb06S4kCsAV6t+tD5qnKRD1pzvUmCtPx8oAGP+APCGxOutOGcSpnp0v\n2xh3WCg8zTkGL0sIlrKqBcCvFlOm+ZpT3QNbgFCFildo27YhNjsDCwqD47bUXLMT\nOofsxuhnR3+U5k66PAbbHos+rvFcpMO3swPmc9cQC5Up43RycoslNvkJhj3tzX/X\n0w5M4vkCgYEA9VT9HGDPl5YFwMQhV2y110kPbbEPlcjMfeNcHFuRg3j4LkbG52po\n3mEdoPFlU/hfU9q6DI6BVan+3aSoIyjFRhNP29+NXunYzbtvEGYB4qqqc1iEIeVy\nElneMSRflZ4LytU7GxO1/AhJ0/YAXCe5eQDsSUqg/0kjqFtCOuZkL2UCgYEA0mZT\n6YVv5s0+QAKuxnW2PFcS8GFxElvpsXlDOAJBJ1KGZfSfQjVdY+NJmJFllAQ50VF+\nx8R0j+nTn7tAbXoIFhp4fitIvrlvr7OgbHtbwseGyIZPKacul9jJ+l34s7bfZoB8\n0J8uNz8cz7PESTP9R75wyd8FHQ/H9lqWX15Zb28CgYEAhWdqn2TRXXd5t2GvU6/M\njb2vwxEWDXf8IrRgYRc14E0Gf3uDK1GEpvAeQWcil2+mvp1gr/VJxQBEk9e2ii/g\nXgOgWEqOwD7e4rh6Y2tkuRHe0AwhBaGTzwDJPuWtiFlBxlD+6/Fi8yK6qqTJe1Mq\nmu7yjcQkGc12s1S0hfzEG7UCgYA0oZhYECMf7zOlO4aQ6p09luKL8zQfzZI17Qmd\nlyLJPWGVW44DN+o2tIKSgbyRPEViUSqPulsWLP3dNTA2spIXRWPi290EqMqBf0Og\nH3Oi09qpir9+we1r2rUbxioSeqqDr5yJa2haNZV1d5igXzr6mW8JcJqM3Ie+3oZD\nMQzaTQKBgEJKTWaTPMb8k6W+YqG1LuGgTdndn6gjvUjemgd6Dz1B22BWXNxlRBBa\nPSeodPB51VfohjxKujoO61aV9y/Dwvj67txCTZMlFiSPEiHvamZH7JuiyypHA0QG\nLnjNjtS9b6Z7/WSSkiO3EXRqEncM0Oua4SHkbam1r3QFNwhru6ZN\n-----END RSA PRIVATE KEY-----"
+        },
+        "production": {
+            "apiKey": "",
+            "merchantKeyId": "2980",
+            "privateKey": ""
+        },
+        "betaAssets": true,
+        "services": ["in.juspay.hyperpay"]
+    },
+    "flipkart_visa": {
+        "clientId": "flipkart_visa",
+        "apiVersion": "v1",
+        "production": {
+            "apiKey": "",
+            "merchantKeyId": "",
+            "privateKey": "",
+            "safetyNetApiKey": ""
+        },
+        "sandbox": {
+            "apiKey": "3829F4BEE9C03902B17",
+            "merchantKeyId": "",
+            "privateKey": "",
+            "safetyNetApiKey": "",
+            "appId": "in.juspay.amazonpay"
+        },
+        "betaAssets": true,
+        "services": ["in.juspay.vies"]
+    }
+}

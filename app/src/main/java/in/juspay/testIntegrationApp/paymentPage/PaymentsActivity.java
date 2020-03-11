@@ -30,6 +30,7 @@ import java.util.concurrent.ExecutionException;
 import in.juspay.hypersdk.data.JuspayResponseHandler;
 import in.juspay.hypersdk.ui.HyperPaymentsCallbackAdapter;
 import in.juspay.services.HyperServices;
+import in.juspay.testIntegrationApp.Preferences;
 import in.juspay.testIntegrationApp.R;
 import in.juspay.testIntegrationApp.SettingsActivity;
 import in.juspay.testIntegrationApp.SignatureAPI;
@@ -81,7 +82,7 @@ public class PaymentsActivity extends AppCompatActivity {
 
         WebView.setWebContentsDebuggingEnabled(true);
 
-        preferences = getSharedPreferences(Payload.PayloadConstants.SHARED_PREF_KEY, MODE_PRIVATE);
+        preferences = getSharedPreferences(Preferences.SHARED_PREF_KEY, MODE_PRIVATE);
 
         prepareUI();
         initializeParams();
@@ -109,7 +110,7 @@ public class PaymentsActivity extends AppCompatActivity {
 
     private void initializeParams() {
         requestId = Payload.generateRequestId();
-        signURL = preferences.getString("signatureURL", Payload.PayloadConstants.signatureURL);
+        signURL = preferences.getString("signatureURL", Preferences.signatureURL);
 
         generateSignaturePayload();
 

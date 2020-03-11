@@ -1,24 +1,17 @@
 package in.juspay.testIntegrationApp.vies;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -28,32 +21,15 @@ import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
 
-import javax.net.ssl.HttpsURLConnection;
-
-import in.juspay.hypersdk.core.PaymentConstants;
 import in.juspay.hypersdk.data.JuspayResponseHandler;
 import in.juspay.hypersdk.ui.HyperPaymentsCallbackAdapter;
-import in.juspay.hypersdk.ui.JuspayPaymentsCallback;
-import in.juspay.hypersdk.ui.JuspayWebView;
 import in.juspay.services.HyperServices;
+import in.juspay.testIntegrationApp.Preferences;
 import in.juspay.testIntegrationApp.R;
-import in.juspay.testIntegrationApp.SignatureAPI;
 import in.juspay.testIntegrationApp.UiUtils;
 import in.juspay.testIntegrationApp.paymentPage.Payload;
-import in.juspay.testIntegrationApp.paymentPage.PaymentsActivity;
-
-import static in.juspay.hypersdk.utils.GPayUtils.LOG_TAG;
 
 public class ViesActivity extends AppCompatActivity {
 
@@ -64,6 +40,7 @@ public class ViesActivity extends AppCompatActivity {
     private CardView signOrderCard;
 
     private SharedPreferences sharedPreferences;
+    private JSONObject merchantConfig;
     private HyperServices hyperServices;
 
     // Variables for process
@@ -89,8 +66,12 @@ public class ViesActivity extends AppCompatActivity {
 
         WebView.setWebContentsDebuggingEnabled(true);
 
-        sharedPreferences = getSharedPreferences(Payload.PayloadConstants.SHARED_PREF_KEY, MODE_PRIVATE);
-
+        sharedPreferences = getSharedPreferences(Preferences.SHARED_PREF_KEY, MODE_PRIVATE);
+        try {
+            merchantConfig = new JSONObject(this.getIntent().getStringExtra("merchantConfig"));
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
         prepareUI();
         initializeParams();
 
@@ -191,7 +172,6 @@ public class ViesActivity extends AppCompatActivity {
                 }
             }
         }.execute();
-
     }
 
     public void startProcessActivity(View view) {
@@ -305,7 +285,7 @@ public class ViesActivity extends AppCompatActivity {
                 JSONObject txn = new JSONObject();
                 try {
 
-                    txn = Utils.createTxnApi(view.getContext(), orderId, "1.00", "4012009999900045", "12", "2030","123", "abcdefgijk");
+                    txn = Utils.createTxnApi(view.getContext(), orderId, "1.00", "4000120000000045", "12", "2030","123", "abcdefgijk");
                 } catch (Exception e){
                     e.printStackTrace();
                 }

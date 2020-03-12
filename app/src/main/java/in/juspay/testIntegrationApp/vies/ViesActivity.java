@@ -1,10 +1,13 @@
 package in.juspay.testIntegrationApp.vies;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -26,13 +29,17 @@ import java.util.Objects;
 import in.juspay.hypersdk.data.JuspayResponseHandler;
 import in.juspay.hypersdk.ui.HyperPaymentsCallbackAdapter;
 import in.juspay.services.HyperServices;
+import in.juspay.testIntegrationApp.ConfigureActivity;
+import in.juspay.testIntegrationApp.MainActivity;
 import in.juspay.testIntegrationApp.Preferences;
 import in.juspay.testIntegrationApp.R;
+import in.juspay.testIntegrationApp.SettingsActivity;
 import in.juspay.testIntegrationApp.UiUtils;
 import in.juspay.testIntegrationApp.paymentPage.Payload;
 
 public class ViesActivity extends AppCompatActivity {
 
+    private static final int SETTINGS_ACTIVITY_REQ_CODE = 420;
     private LinearLayout initiateLayout;
     private LinearLayout processLayout;
     private Button getCustInfo;
@@ -292,6 +299,26 @@ public class ViesActivity extends AppCompatActivity {
                 hyperServices.process(ViesPayload.getPayPayload(sharedPreferences, requestId, view, txn));
             }
         }.start();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.configure:
+                Intent intent = new Intent(ViesActivity.this, SettingsActivity.class);
+                startActivityForResult(intent, SETTINGS_ACTIVITY_REQ_CODE, new Bundle());
+                return true;
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }

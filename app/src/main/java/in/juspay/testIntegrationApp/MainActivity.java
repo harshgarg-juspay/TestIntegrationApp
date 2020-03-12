@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         preferences = getSharedPreferences(Preferences.SHARED_PREF_KEY, MODE_PRIVATE);
         Preferences.setDefaultsIfNotPresent(preferences);
+        Preferences.readPrefs(preferences);
 
         constructPrefetchPayload();
         try {
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 Preferences.merchantIdList.add(keys.next());
             }
             //Fetch 1st object and update preferences. Whenever it is updated in UI, update the preferences.
-            Preferences.updatePreferences(merchantConfig.getJSONObject("flipkart_visa"));
+            Preferences.updatePreferences(merchantConfig.getJSONObject("flipkart_visa"), preferences);
 
         } catch (JSONException e){
             e.printStackTrace();
@@ -126,11 +127,11 @@ public class MainActivity extends AppCompatActivity {
 //            Intent initiateIntent = new Intent(this, PaymentsActivity.class);
 //            startActivity(initiateIntent);
             Intent initiateIntent = new Intent(this, ViesActivity.class);
-//            try {
-//                initiateIntent.putExtra("merchantConfig", merchantConfig.get("flipkart_visa").toString());
-//            }catch (JSONException e){
-//                e.printStackTrace();
-//            }
+            try {
+                initiateIntent.putExtra("merchantConfig", merchantConfig.get("flipkart_visa").toString());
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
             startActivity(initiateIntent);
 
         } else {

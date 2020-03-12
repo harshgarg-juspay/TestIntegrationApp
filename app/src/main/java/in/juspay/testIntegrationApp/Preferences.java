@@ -126,7 +126,7 @@ public class Preferences {
         editor.apply();
     }
 
-    public static void updatePreferences(JSONObject conf) {
+    public static void updatePreferences(JSONObject conf, SharedPreferences preferences) {
         try {
             Iterator<?> keys = conf.keys();
             while (keys.hasNext()) {
@@ -139,11 +139,9 @@ public class Preferences {
                         apiVersion = conf.get(key).toString();
                         break;
                     case "sandbox":
-                        environment = "sandbox";
                         setEnvDetails(conf.toString(), "sandbox");
                         break;
                     case "production":
-                        environment = "production";
                         setEnvDetails(conf.toString(), "production");
                         break;
                     case "betaAssets":
@@ -154,6 +152,7 @@ public class Preferences {
                         break;
                 }
             }
+            writePrefs(preferences);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -185,42 +184,65 @@ public class Preferences {
         }
     }
 
-    static void readPrefs(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE);
-
+    static void readPrefs(SharedPreferences preferences) {
         try {
             JSONObject json = new JSONObject(preferences.getString(PREFS_KEY, "{}"));
 
             merchantId = json.optString("merchantId", merchantId);
-            clientId = merchantId + "_android";
-            safetyNetApiKey = json.optString("safetyNetApiKey", safetyNetApiKey);
+            clientId = json.optString("clientId", clientId);
+            betaAssets = json.optBoolean("betaAssets", betaAssets);
+            testMode = json.optString("testMode", testMode);
+            apiVersion = json.optString("apiVersion", apiVersion);
+            merchantKeyId = json.optString("merchantKeyId", merchantKeyId);
+            privateKey = json.optString("privateKey", privateKey);
+            environment = json.optString("environment", environment);
             juspayApiKey = json.optString("juspayApiKey", juspayApiKey);
             appId = json.optString("appId", appId);
+            safetyNetApiKey = json.optString("safetyNetApiKey", safetyNetApiKey);
+            useLocalEligibility = json.optString("useLocalEligibility", useLocalEligibility);
+            customerId = json.optString("customerId", customerId);
+            mobileNumber = json.optString("mobileNumber", mobileNumber);
             gwRefId = json.optString("gwRefId", gwRefId);
             environment = json.optString("environment", environment);
-            testMode = json.optString("test_mode", testMode);
-            useLocalEligibility = json.optString("useLocalEligibility", useLocalEligibility);
+//            clientId = merchantId + "_android";
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-    //Before passing this list of params to other activity,
-    static void writePrefs(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE);
-        JSONObject json = new JSONObject();
-
+    static void writePrefs(SharedPreferences preferences) {
         try {
+            JSONObject json = new JSONObject(preferences.getString(PREFS_KEY, "{}"));
             json.put("merchantId", merchantId);
-            json.put("safetyNetApiKey", safetyNetApiKey);
+            json.put("clientId", clientId);
+            json.put("betaAssets", betaAssets);
+            json.put("testMode", testMode);
+            json.put("clientId", clientId);
+            json.put("apiVersion", apiVersion);
+            json.put("merchantKeyId", merchantKeyId);
+            json.put("privateKey", privateKey);
+            json.put("signatureURL", signatureURL);
             json.put("juspayApiKey", juspayApiKey);
             json.put("appId", appId);
-            json.put("gwRefId", gwRefId);
-            json.put("environment", environment);
-            json.put("test_mode", testMode);
+            json.put("safetyNetApiKey", safetyNetApiKey);
             json.put("useLocalEligibility", useLocalEligibility);
+            json.put("customerId", customerId);
+            json.put("mobileNumber", mobileNumber);
+            //Below commented are not required as they are final variables.
+//            json.put("firstName", firstName);
+//            json.put("lastName", lastName);
+//            json.put("emailAddress", emailAddress);
+//            json.put("mandateOption", mandateOption);
+//            json.put("mandateMaxAmount", mandateMaxAmount);
+//            json.put("amount", amount);
+//            json.put("returnUrl", returnUrl);
+//            json.put("language", language);
+            json.put("gwRefId", gwRefId);
+            json.put("initAction", initAction);
+            json.put("processAction", processAction);
+            json.put("service", service);
 
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putString(PREFS_KEY, json.toString());
+            editor.putString(SHARED_PREF_KEY, json.toString());
             editor.apply();
         } catch (JSONException e) {
             e.printStackTrace();

@@ -65,7 +65,7 @@ public class Payload {
             orderDetails.put("merchant_id", preferences.getString("merchantId", PayloadConstants.merchantId));
             orderDetails.put("amount", preferences.getString("amount", PayloadConstants.amount));
             String mandateType = preferences.getString("mandateOption", PayloadConstants.mandateOption);
-            if (!mandateType.equals("None")) {
+            if (!mandateType.equalsIgnoreCase("None")) {
                 orderDetails.put("options.create_mandate", mandateType);
                 orderDetails.put("mandate_max_amount", preferences.getString("mandateMaxAmount", PayloadConstants.mandateMaxAmount));
                 orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_EXPIRY_DATE", "2020-12-30");
@@ -213,27 +213,27 @@ public class Payload {
 
         final public static String service = "in.juspay.hyperpay";
 
-        final public static String mobileNumber = "9876543210";
-        final public static String clientId = "jiosaavn_android";
+        final public static String mobileNumber = "7338513562";
+        final public static String clientId = "idea_android";
         final public static String firstName = "Test";
         final public static String lastName = "User";
-        final public static String emailAddress = "test@juspay.in";
-        final public static String customerId = "9876543210";
-        final public static String merchantId = "jiosaavn";
+        final public static String emailAddress = "test007@gmail.com";
+        final public static String customerId = "7338513562";
+        final public static String merchantId = "idea_preprod";
 
-        final public static String mandateOption = "OPTIONAL";
+        final public static String mandateOption = "NONE";
         final public static String mandateMaxAmount = "1.0";
 
         final public static String initAction = "initiate";
-        final public static String processAction = "paymentPage";
-        final public static String merchantKeyId = "3164";
+        final public static String processAction = "quickPay";
+        final public static String merchantKeyId = "2980";
         final public static String environment = "sandbox";
 
         final public static String amount = "1.0";
         final public static String returnUrl = "https://sandbox.juspay.in/end"; //-
         final public static String language = "english";
 
-        final public static String signatureURL = "https://dry-cliffs-89916.herokuapp.com/sign-hyper-beta";
+        final public static String signatureURL = "https://dry-cliffs-89916.herokuapp.com/sign-idea";
 
         final public static boolean betaAssets = true;
 

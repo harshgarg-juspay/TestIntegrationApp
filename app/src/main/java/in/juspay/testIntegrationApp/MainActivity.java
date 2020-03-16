@@ -86,12 +86,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void startInitiateActivity(View view){
-        if(isPrefetchDone) {
-            Intent initiateIntent = new Intent(this, PaymentsActivity.class);
-            startActivity(initiateIntent);
-        } else {
-            Snackbar.make(view, "Please Complete prefetch", Snackbar.LENGTH_SHORT).show();
-        }
+        Intent initiateIntent = new Intent(this, PaymentsActivity.class);
+        startActivity(initiateIntent);
     }
 
     public void startPrefetch(View view){

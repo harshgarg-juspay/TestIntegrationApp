@@ -90,7 +90,7 @@ public class SettingsActivity extends AppCompatActivity {
             actionBar.setTitle(UiUtils.getWhiteText("Configuration"));
         }
 
-        actions = Arrays.asList("paymentPage", "addCard", "addAndLinkWallet", "nb", "upi", "delinkWallet", "quickPay", "emi");
+        actions = Arrays.asList("paymentPage", "paymentManagement", "addCard", "addAndLinkWallet", "nb", "upi", "delinkWallet", "quickPay", "emi");
         languages = Arrays.asList("English", "Hindi", "Tamil", "Malayalam", "Gujarati", "Marathi", "Telugu", "Bengali", "Kannada");
         mandateOptions = Arrays.asList("None", "OPTIONAL", "REQUIRED");
 

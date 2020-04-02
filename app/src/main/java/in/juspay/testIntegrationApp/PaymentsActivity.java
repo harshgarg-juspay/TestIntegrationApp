@@ -1,5 +1,6 @@
 package in.juspay.testIntegrationApp;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -8,8 +9,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -34,6 +37,7 @@ public class PaymentsActivity extends AppCompatActivity {
 
     private static final int SETTINGS_ACTIVITY_REQ_CODE = 420;
     private SharedPreferences preferences;
+    private ProgressDialog pd;
 
     // Variables for initiate
     private JSONObject signaturePayload;
@@ -73,6 +77,12 @@ public class PaymentsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payments);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
+
+        createPD();
         WebView.setWebContentsDebuggingEnabled(true);
 
         preferences = getSharedPreferences(Payload.PayloadConstants.SHARED_PREF_KEY, MODE_PRIVATE);
@@ -80,7 +90,7 @@ public class PaymentsActivity extends AppCompatActivity {
         prepareUI();
         initializeParams();
 
-        hyperServices = new HyperServices(this);
+        hyperServices = new HyperServices(this, findViewById(android.R.id.content));
     }
 
     private void prepareUI() {
@@ -96,6 +106,23 @@ public class PaymentsActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(UiUtils.getWhiteText("Initiate"));
         }
+    }
+
+    private void createPD() {
+        pd = new ProgressDialog(this);
+        pd.setMessage("Processing...");
+        pd.setCancelable(false);
+        ProgressBar progressBar = new ProgressBar(this);
+    }
+
+    private void showPD() {
+        if (pd == null) createPD();
+        pd.show();
+    }
+
+    private void hidePD() {
+        if (pd == null) return;
+        pd.cancel();
     }
 
     private void initializeParams() {
@@ -199,6 +226,9 @@ public class PaymentsActivity extends AppCompatActivity {
                                     processLayout.setVisibility(View.VISIBLE);
                                     Toast.makeText(PaymentsActivity.this, "Process Complete", Toast.LENGTH_SHORT).show();
                                     Log.wtf("process_result", data.toString());
+                                    break;
+                                case "hide_loader":
+                                    hidePD();
                                     break;
                                 default:
                                     Toast.makeText(PaymentsActivity.this, "Unknown Result", Toast.LENGTH_SHORT).show();
@@ -367,6 +397,7 @@ public class PaymentsActivity extends AppCompatActivity {
 
     public void processJuspaySdk(View view) {
         if (isOrderDetailsSigned) {
+            showPD();
             JSONObject payload = Payload.getPaymentsPayload(preferences, requestId, processPayload);
             hyperServices.process(payload);
             Objects.requireNonNull(getSupportActionBar()).hide();

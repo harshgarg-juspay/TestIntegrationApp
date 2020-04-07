@@ -161,21 +161,23 @@ public class PaymentsActivity extends AppCompatActivity {
     }
 
     public void signSignaturePayload(View view) {
-        try {
-            SignatureAPI signatureAPI = new SignatureAPI();
-            String payload;
+        new Thread(() -> {
             try {
-                payload = URLEncoder.encode(signaturePayload.toString(), "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                payload = signaturePayload.toString();
+                SignatureAPI signatureAPI = new SignatureAPI();
+                String payload;
+                try {
+                    payload = URLEncoder.encode(signaturePayload.toString(), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    payload = signaturePayload.toString();
+                }
+                initiateSignature = signatureAPI.execute(signURL, payload).get();
+                isSignaturePayloadSigned = true;
+                generateInitiatePayload();
+                runOnUiThread(() -> Toast.makeText(this, "Payload signed", Toast.LENGTH_SHORT).show());
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
             }
-            initiateSignature = signatureAPI.execute(signURL, payload).get();
-            isSignaturePayloadSigned = true;
-            Toast.makeText(this, "Payload signed", Toast.LENGTH_SHORT).show();
-            generateInitiatePayload();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        }).start();
     }
 
     public void showInitiateSigningInput(View view) {
@@ -326,21 +328,23 @@ public class PaymentsActivity extends AppCompatActivity {
 
     public void signOrderDetails(View view) {
         if (isOrderIDGenerated) {
-            try {
-                SignatureAPI signatureAPI = new SignatureAPI();
-                String payload;
+            new Thread(() -> {
                 try {
-                    payload = URLEncoder.encode(orderDetails.toString(), "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    payload = orderDetails.toString();
+                    SignatureAPI signatureAPI = new SignatureAPI();
+                    String payload;
+                    try {
+                        payload = URLEncoder.encode(orderDetails.toString(), "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        payload = orderDetails.toString();
+                    }
+                    processSignature = signatureAPI.execute(signURL, payload).get();
+                    isOrderDetailsSigned = true;
+                    generateProcessPayload();
+                    runOnUiThread(() -> Toast.makeText(this, "Signed Order Details", Toast.LENGTH_SHORT).show());
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
                 }
-                processSignature = signatureAPI.execute(signURL, payload).get();
-                isOrderDetailsSigned = true;
-                Toast.makeText(this, "Signed Order Details", Toast.LENGTH_SHORT).show();
-                generateProcessPayload();
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
+            }).start();
         } else {
             Snackbar.make(view, "Please generate an order id", Snackbar.LENGTH_SHORT).show();
         }

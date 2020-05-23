@@ -2,6 +2,7 @@ package in.juspay.testIntegrationApp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 
@@ -26,9 +27,13 @@ public class SelectionActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        Intent prefetchIntent = new Intent(this, MainActivity.class);
-        startActivity(prefetchIntent);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void startV1Activity(View view){

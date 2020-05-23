@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -61,9 +60,14 @@ public class PaymentsActivityV1 extends AppCompatActivity {
     private String orderId;
 
     private boolean isClientAuthTokenGenerated;
+    private boolean didCustomerAPIFail;
     private boolean isOrderIDGenerated;
+    private boolean isOrderCreated;
     private boolean isProcessDone;
     private JSONObject processResult;
+    private JSONObject customerAPIResult;
+    private JSONObject createOrderInput;
+    private JSONObject createOrderResult;
 
     private LinearLayout processLayout;
 
@@ -128,8 +132,17 @@ public class PaymentsActivityV1 extends AppCompatActivity {
 
         isOrderIDGenerated = false;
         orderId = "";
+        clientAuthToken = "";
         isProcessDone = false;
         processResult = new JSONObject();
+
+        isClientAuthTokenGenerated = false;
+        isOrderCreated = false;
+        didCustomerAPIFail = false;
+
+        createOrderInput = new JSONObject();
+        createOrderResult = new JSONObject();
+        customerAPIResult = new JSONObject();
     }
 
     @Override
@@ -149,6 +162,12 @@ public class PaymentsActivityV1 extends AppCompatActivity {
     public void showclientAuthTokenOutput(View view) {
         if (isClientAuthTokenGenerated) {
             UiUtils.showMessageInModal(this, "Client Auth Token Output", clientAuthToken);
+        } else if (didCustomerAPIFail) {
+            try {
+                UiUtils.showMessageInModal(this, "Client Auth Token Output", customerAPIResult.toString(4));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         } else {
             Snackbar.make(view, "Please generate Client Auth Token to see the output", Snackbar.LENGTH_SHORT).show();
         }
@@ -254,10 +273,9 @@ public class PaymentsActivityV1 extends AppCompatActivity {
 
     public void generateOrderID(View view) {
         orderId = Payload.generateOrderId();
-        new OrderApiCaller().execute();
         isOrderIDGenerated = true;
         Snackbar.make(view, "Order ID Generated: " + orderId, Snackbar.LENGTH_SHORT).show();
-        generateProcessPayload();
+        generateCreateOrderInput();
     }
 
     public void copyOrderID(View view) {
@@ -277,18 +295,64 @@ public class PaymentsActivityV1 extends AppCompatActivity {
         }
     }
 
+    public void createOrder(View view) {
+        if (isOrderIDGenerated) {
+            new OrderApiCaller(createOrderInput, view).execute();
+            generateProcessPayload();
+        } else {
+            Snackbar.make(view, "Please generate Order ID", Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    public void generateCreateOrderInput() {
+        JSONObject obj = new JSONObject();
+
+        try {
+            obj.put("order_id", orderId);
+            obj.put("amount", PayloadConstants.amount);
+            obj.put("customer_id", PayloadConstants.customerId);
+            obj.put("metadata.JUSPAY:gateway_reference_id", "vodafone");
+            obj.put("metadata.LAZYPAY:gateway_reference_id", "vodafone");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Log.e("orderJson", obj.toString());
+        createOrderInput = obj;
+    }
+
+    public void showCreateOrderInput(View view) {
+        if (isOrderIDGenerated) {
+            try {
+                UiUtils.showMessageInModal(this, "Create Order Input", createOrderInput.toString(4));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Snackbar.make(view, "Please generate Order ID", Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    public void showCreateOrderOutput(View view) {
+        if (isOrderCreated) {
+            UiUtils.showMessageInModal(this, "Create Order Result", createOrderResult.toString());
+        } else {
+            Snackbar.make(view, "Please create Order", Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
     public void generateProcessPayload() {
         processPayload = Payload.generateProcessPayloadV1(preferences, orderId, clientAuthToken);
     }
 
     public void processJuspaySdk(View view) {
-        if (isOrderIDGenerated) {
+        if (isOrderCreated) {
             showPD();
             JSONObject payload = Payload.getPaymentsPayload(preferences, requestId, processPayload);
             hyperServices.process(payload);
             Objects.requireNonNull(getSupportActionBar()).hide();
         } else {
-            Snackbar.make(view, "Please generate Order ID", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(view, "Please create Order", Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -468,7 +532,9 @@ public class PaymentsActivityV1 extends AppCompatActivity {
         protected void onPostExecute(String result) {
             try {
                 Log.e("onPostExecute", result);
+
                 JSONObject res = new JSONObject(result);
+                customerAPIResult = res;
 
                 Log.e("jsonObjCust", res.toString());
 
@@ -476,33 +542,24 @@ public class PaymentsActivityV1 extends AppCompatActivity {
                 Log.e("clientTokenFromJson", token);
                 clientAuthToken = token;
                 isClientAuthTokenGenerated = true;
+                didCustomerAPIFail = false;
                 Snackbar.make(view, "Client Auth Token generated", Snackbar.LENGTH_SHORT).show();
                 generateInitiatePayload();
             } catch (JSONException e) {
+                didCustomerAPIFail = true;
                 e.printStackTrace();
-                Log.e("e",""+e);
             }
         }
 
     }
 
     public class OrderApiCaller extends AsyncTask<URL, Integer, String> {
+        public JSONObject orderRequest;
+        View view;
 
-        public JSONObject generateOrderJSON(String orderId) {
-            JSONObject obj = new JSONObject();
-
-            try {
-                obj.put("order_id", orderId);
-                obj.put("amount", PayloadConstants.amount);
-                obj.put("customer_id", PayloadConstants.customerId);
-                obj.put("metadata.JUSPAY:gateway_reference_id", "vodafone");
-                obj.put("metadata.LAZYPAY:gateway_reference_id", "vodafone");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            Log.e("orderJson", obj.toString());
-            return obj;
+        OrderApiCaller(JSONObject orderRequest, View view) {
+            this.orderRequest = orderRequest;
+            this.view = view;
         }
 
         protected String doInBackground(URL... urls) {
@@ -519,7 +576,7 @@ public class PaymentsActivityV1 extends AppCompatActivity {
 
                 byte[] encodedAuth = auth.getBytes("UTF-8");
 
-                JSONObject orderData = generateOrderJSON(orderId);
+                JSONObject orderData = orderRequest;
 
                 connection.setRequestProperty("Authorization", "Basic " + new String(android.util.Base64.encode(encodedAuth, Base64.DEFAULT)));
 
@@ -582,7 +639,23 @@ public class PaymentsActivityV1 extends AppCompatActivity {
         }
 
         protected void onPostExecute(String result) {
-            Log.d("onPostExecute", result);
+            Log.e("onPostExecute", result);
+
+            try {
+                JSONObject res = new JSONObject(result);
+                int status = Integer.parseInt(res.getString("status_id"));
+                createOrderResult = res;
+
+                if(status == 1 || status == 10) {
+                    isOrderCreated = true;
+                    Snackbar.make(view, "Order Created", Snackbar.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                isOrderCreated = false;
+                e.printStackTrace();
+            }
+
+
         }
 
     }

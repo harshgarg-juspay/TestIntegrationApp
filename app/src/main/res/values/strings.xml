@@ -39,7 +39,9 @@
 
     <string name="processDescV1">
          Step 1. Hit GENERATE ORDER ID button.
-        \nStep 2. Hit PROCESS button.
+        \nStep 2. Hit CREATE ORDER button.
+        \nStep 3. Hit PROCESS button.
+        \nHit INPUT button to check process input under CREATE ORDER.
         \nHit INPUT button to check process input under PROCESS.
         \n\nRefer FAQ section for additional details.
     </string>
@@ -58,6 +60,7 @@
 
     <string name="prefetch">Prefetch</string>
     <string name="generate_order_id">Generate Order ID</string>
+    <string name="create_order">Create Order</string>
     <string name="sign_order_details_payload">Sign Order Details Payload</string>
     <string name="terminate">Terminate</string>
     <string name="sign_customer_details_payload">Sign Customer Details Payload</string>

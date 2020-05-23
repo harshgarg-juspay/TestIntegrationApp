@@ -46,7 +46,6 @@ public class PaymentsActivityV1 extends AppCompatActivity {
     // Variables for initiate
     private JSONObject initiatePayload;
 
-    private String apiKey;
     private String clientAuthToken;
 
     private boolean isInitiateDone;
@@ -74,6 +73,11 @@ public class PaymentsActivityV1 extends AppCompatActivity {
     // Payment services
     private HyperServices hyperServices;
     private String requestId;
+
+    private String customerId;
+    private String apiKey;
+    private String environment;
+    private String amount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +129,6 @@ public class PaymentsActivityV1 extends AppCompatActivity {
 
     private void initializeParams() {
         requestId = Payload.generateRequestId();
-        apiKey = preferences.getString("apiKey", PayloadConstants.apiKey);
 
         isInitiateDone = false;
         initiateResult = new JSONObject();
@@ -143,6 +146,11 @@ public class PaymentsActivityV1 extends AppCompatActivity {
         createOrderInput = new JSONObject();
         createOrderResult = new JSONObject();
         customerAPIResult = new JSONObject();
+
+        apiKey = preferences.getString("apiKey", PayloadConstants.apiKey);
+        customerId = preferences.getString("customerId", PayloadConstants.customerId);
+        environment = preferences.getString("environment", PayloadConstants.environment).equals("sandbox") ? "sandbox" : "api";
+        amount = preferences.getString("amount", PayloadConstants.amount);
     }
 
     @Override
@@ -156,7 +164,7 @@ public class PaymentsActivityV1 extends AppCompatActivity {
     }
 
     public void showclientAuthTokenInput(View view) {
-        UiUtils.showMessageInModal(this, "Client Auth Token Input", apiKey);
+        UiUtils.showMessageInModal(this, "Client Auth Token Input", "customerId: " + customerId + "\napiKey: " + apiKey);
     }
 
     public void showclientAuthTokenOutput(View view) {
@@ -309,8 +317,8 @@ public class PaymentsActivityV1 extends AppCompatActivity {
 
         try {
             obj.put("order_id", orderId);
-            obj.put("amount", PayloadConstants.amount);
-            obj.put("customer_id", PayloadConstants.customerId);
+            obj.put("amount", amount);
+            obj.put("customer_id", customerId);
             obj.put("metadata.JUSPAY:gateway_reference_id", "vodafone");
             obj.put("metadata.LAZYPAY:gateway_reference_id", "vodafone");
         } catch (JSONException e) {
@@ -358,11 +366,11 @@ public class PaymentsActivityV1 extends AppCompatActivity {
 
     public void showProcessInput(View view) {
         try {
-            if (isOrderIDGenerated) {
+            if (isOrderCreated) {
                 JSONObject payload = Payload.getPaymentsPayload(preferences, requestId, processPayload);
                 UiUtils.showMessageInModal(this, "Process Input", payload.toString(4));
             } else {
-                Snackbar.make(view, "Please generate Order ID", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(view, "Please create Order", Snackbar.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -462,8 +470,6 @@ public class PaymentsActivityV1 extends AppCompatActivity {
         }
 
         protected String doInBackground(URL... urls) {
-            String customerId = preferences.getString("customerId", PayloadConstants.customerId);
-            String environment = preferences.getString("environment", PayloadConstants.environment).equals("sandbox") ? "sandbox" : "api";
 
             String url = "https://" + environment + ".juspay.in/customers/" + customerId + "?options.get_client_auth_token=true";
 
@@ -563,7 +569,6 @@ public class PaymentsActivityV1 extends AppCompatActivity {
         }
 
         protected String doInBackground(URL... urls) {
-            String environment = preferences.getString("environment", PayloadConstants.environment).equals("sandbox") ? "sandbox" : "api";
             String url = "https://" + environment + ".juspay.in/orders/";
 
             try {

@@ -82,9 +82,6 @@ public class Payload {
             orderDetails.put("amount", preferences.getString("amount", PayloadConstants.amount));
             String mandateType = preferences.getString("mandateOption", PayloadConstants.mandateOption);
 
-            orderDetails.put("metadata.JUSPAY:gateway_reference_id", "vodafone");
-            orderDetails.put("metadata.LAZYPAY:gateway_reference_id", "vodafone");
-
             if (!mandateType.equalsIgnoreCase("None")) {
                 orderDetails.put("options.create_mandate", mandateType);
                 orderDetails.put("mandate_max_amount", preferences.getString("mandateMaxAmount", PayloadConstants.mandateMaxAmount));
@@ -99,7 +96,7 @@ public class Payload {
                 orderDetails.put("metadata.PAYTM_V2:SUBSCRIPTION_START_DATE", formattedDate);
             }
             orderDetails.put("return_url", PayloadConstants.returnUrl);
-            String desc =  "Get pro for Rs. 0.33/mo for 3 months";
+            String desc =  "";
             orderDetails.put("description", desc);
         } catch (JSONException e) {
             e.printStackTrace();

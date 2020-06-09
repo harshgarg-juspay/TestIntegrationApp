@@ -451,7 +451,9 @@ public class PaymentsActivityV1 extends AppCompatActivity {
                 if (data.hasExtra("changed") && data.getBooleanExtra("changed", false)) {
                     Toast.makeText(this, "Resetting due to change in parameters", Toast.LENGTH_SHORT).show();
                     reset();
-                    hyperServices.terminate();
+                    if (isInitiateDone) {
+                        hyperServices.terminate();
+                    }
                 }
             }
         } else {

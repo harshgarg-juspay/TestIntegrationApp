@@ -319,8 +319,6 @@ public class PaymentsActivityV1 extends AppCompatActivity {
             obj.put("order_id", orderId);
             obj.put("amount", amount);
             obj.put("customer_id", customerId);
-            obj.put("metadata.JUSPAY:gateway_reference_id", "vodafone");
-            obj.put("metadata.LAZYPAY:gateway_reference_id", "vodafone");
         } catch (JSONException e) {
             e.printStackTrace();
         }
